@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.rice.webchat.dao.GroupMapper">
+
+    <sql id="insertFields">
+        chat_group.name, chat_group.owner_id, chat_group.capacity
+    </sql>
+
+    <sql id="selectFields">
+        chat_group.id, chat_group.name, chat_group.owner_id, chat_group.capacity, chat_group.create_time
+    </sql>
+
+    <select id="selectById" resultType="GeneralChatGroup">
+        select <include refid="selectFields"></include>, count(user_group.user_id) as count
+        from chat_group, user_group
+        where chat_group.id = #{id} and user_group.group_id = #{id}
+    </select>
+
+    <select id="selectByownerId" resultType="GeneralChatGroup">
+        select <include refid="selectFields"></include>, count(user_group.user_id) as count
+        from chat_group, user_group
+        where chat_group.owner_id = #{owner_id} and user_group.group_id = chat_group.id
+    </select>
+
+    <select id="selectUsersFromGroup" resultType="User">
+        select id, username, password, salt, email, user.type, status, activation_code, header_url, create_time
+        from user, user_group
+        where user_group.group_id = #{group_id} and user_group.user_id = user.id
+    </select>
+
+    <select id="selectGroupIdsByUserId" resultType="Integer">
+        SELECT chat_group.id
+        FROM chat_group, user_group
+        WHERE user_group.user_id = #{user_id} AND chat_group.id = user_group.group_id;
+    </select>
+
+    <select id="selectGroups" resultType="GeneralChatGroup">
+        select <include refid="selectFields"></include>, COUNT(DISTINCT user_group.user_id) AS count
+        from chat_group
+        JOIN user_group ON user_group.group_id = chat_group.id
+        JOIN user ON user.id = user_group.user_id
+        GROUP BY <include refid="selectFields"></include>
+        HAVING SUM(user.username = #{username}) > 0;
+    </select>
+
+    <insert id="insertGroup" parameterType="GeneralChatGroup" keyProperty="id">
+        insert into user (<include refid="insertFields"></include>)
+        values(#{name}, #{owner_id}, #{capacity})
+    </insert>
+
+    <update id="updateUserTypeByUserId">
+        update user_group set type = #{type} where user_id = #{userId} and group_id = #{group_id}
+    </update>
+
+    <insert id="addUserToGroupByUserId">
+        insert into user_group user_id, group_id, type
+        values(#{userId}, #{group_id}, #{type})
+    </insert>
+
+    <insert id="addUserToGroup">
+        insert into user_group (user_id, group_id, type)
+        select id, #{group_id}, 0 from user where username = #{username}
+    </insert>
+
+    <delete id="deleteUserFromGroupByUserId">
+        delete from user_group
+        where user_id = #{user_id} and group_id = #{group_id}
+    </delete>
+
+    <delete id="deleteUserFromGroup">
+        delete from user_group
+        using user_group, user
+        where user_id = user.id and group_id = #{group_id} and user.username = #{username};
+    </delete>
+
+    <select id="deleteGroup">
+        DELETE FROM chat_group
+        WHERE chat_group.id = #{group_id};
+    </select>
+
+</mapper>

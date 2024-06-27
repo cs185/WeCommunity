@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.rice.webchat.dao.FriendshipMapper">
+
+    <sql id="fields">
+        friendship.user_id1, friendship.user_id2, friendship.creation_time, friendship.update_time, friendship.status
+    </sql>
+
+    <sql id="userFields">
+        user.id, user.username, user.password, user.salt, user.email, user.type, user.status, user.activation_code, user.header_url, user.create_time
+    </sql>
+
+    <select id="selectFriendshipStatusByIds" resultType="Integer">
+        select status
+        from friendship
+        where user_id1 = #{id1} AND user_id2 = #{id2}
+    </select>
+
+    <select id="selectFriendsByUsername" resultType="User">
+        select <include refid="userFields"></include> from
+        (select user_id2 as id from friendship
+        join user on friendship.user_id1 = user.id
+        where user.username = #{username}
+        union
+        select user_id1 as id from friendship
+        join user on friendship.user_id2 = user.id
+        where user.username = #{username}) as t
+        join user on t.id = user.id
+    </select>
+
+    <insert id="insertFriendship" parameterType="map">
+        insert into friendship
+        <foreach collection="friendshipMap" index="index" item="item" open="(" close=")" separator=",">
+            ${index}
+        </foreach>
+        values
+        <foreach collection="friendshipMap" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </insert>
+
+    <update id="updateFriendshipStatus">
+        update friendship set status = #{status} where user_id1 = #{id1} AND user_id2 = #{id2}
+    </update>
+
+    <update id="deleteFriendship">
+        delete from friendship where user_id1 = #{id1} AND user_id2 = #{id2}
+    </update>
+
+</mapper>
