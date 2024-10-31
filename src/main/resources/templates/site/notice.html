@@ -7,12 +7,13 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<link rel="stylesheet" th:href="@{/css/letter.css}" />
-	<title>牛客网-通知</title>
+	<title>WeCommunity - 通知</title>
 </head>
 <body>
 	<div class="nk-container">
 		<!-- 头部 -->
-		<header class="bg-dark sticky-top" th:replace="~{index::header}">
+		<header class="bg-dark sticky-top" th:replace="index::header">
+
 		</header>
 
 		<!-- 内容 -->
@@ -23,12 +24,12 @@
 					<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">
 							<a class="nav-link position-relative" th:href="@{/letter/list}">
-								朋友私信<span class="badge badge-danger" th:text="${letterUnreadCount}" th:if="${letterUnreadCount!=0}">3</span>
+								Friend Messages<span class="badge badge-danger" th:text="${letterUnreadCount}" th:if="${letterUnreadCount!=0}"></span>
 							</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link position-relative active" th:href="@{/notice/list}">
-								系统通知<span class="badge badge-danger" th:text="${noticeUnreadCount}" th:if="${noticeUnreadCount!=0}">27</span>
+								System Notifications<span class="badge badge-danger" th:text="${noticeUnreadCount}" th:if="${noticeUnreadCount!=0}"></span>
 							</a>
 						</li>
 					</ul>
@@ -37,9 +38,9 @@
 				<!-- 通知列表 -->
 				<ul class="list-unstyled">
 					<!--评论类通知-->
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${commentNotice.message!=null}">
-						<span class="badge badge-danger" th:text="${commentNotice.unread!=0?commentNotice.unread:''}">3</span>
-						<img src="http://static.nowcoder.com/images/head/reply.png" class="mr-4 user-header" alt="通知图标">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${commentNotice!=null}">
+						<span class="badge badge-danger" th:text="${commentNotice.unread!=0?commentNotice.unread:''}"></span>
+						<img src="http://static.nowcoder.com/images/head/reply.png" class="mr-4 user-header" alt="Notification icon">
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
 								<span>评论</span>
@@ -53,18 +54,18 @@
 									评论了你的<b th:text="${commentNotice.entityType==1?'帖子':'回复'}">帖子</b> ...
 								</a>
 								<ul class="d-inline font-size-12 float-right">
-									<li class="d-inline ml-2"><span class="text-primary">共 <i th:text="${commentNotice.count}">3</i> 条会话</span></li>
+									<li class="d-inline ml-2"><span class="text-primary">Total <i th:text="${commentNotice.count}">3</i> v</span></li>
 								</ul>
 							</div>
 						</div>
 					</li>
 					<!--点赞类通知-->
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${likeNotice.message!=null}">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${likeNotice!=null}">
 						<span class="badge badge-danger" th:text="${likeNotice.unread!=0?likeNotice.unread:''}">3</span>
 						<img src="http://static.nowcoder.com/images/head/like.png" class="mr-4 user-header" alt="通知图标">
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
-								<span>赞</span>
+								<span>Like</span>
 								<span class="float-right text-muted font-size-12"
 									  th:text="${#dates.format(likeNotice.message.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</span>
 							</h6>
@@ -81,7 +82,7 @@
 						</div>
 					</li>
 					<!--关注类通知-->
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${followNotice.message!=null}">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${followNotice!=null}">
 						<span class="badge badge-danger" th:text="${followNotice.unread!=0?followNotice.unread:''}">3</span>
 						<img src="http://static.nowcoder.com/images/head/follow.png" class="mr-4 user-header" alt="通知图标">
 						<div class="media-body">
@@ -107,7 +108,8 @@
 		</div>
 
 		<!-- 尾部 -->
-		<footer class="bg-dark" th:replace="~{index::footer}">
+		<footer class="bg-dark" th:replace="index::footer">
+
 		</footer>
 	</div>
 
