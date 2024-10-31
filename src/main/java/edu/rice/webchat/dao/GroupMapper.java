@@ -11,6 +11,8 @@ public interface GroupMapper {
 
     GeneralChatGroup selectById(int id);
 
+    GeneralChatGroup selectByName(String name);
+
     GeneralChatGroup selectByOwnerId(int owner_id);
 
     List<User> selectUsersFromGroup(int group_id);

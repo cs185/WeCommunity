@@ -1,12 +1,5 @@
 package edu.rice.webchat.entity.group;
 
-import com.google.gson.JsonObject;
-import edu.rice.webchat.entity.message.Message;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-import edu.rice.webchat.service.DBService;
-import edu.rice.webchat.entity.user.User;
-
 import java.util.Date;
 
 public abstract class AChatGroup{

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" th:href="@{/css/global.css}" />
+  <link rel="stylesheet" th:href="@{/css/group.css}" />
+  <title>Group Chat</title>
+  <style>
+    .chat-container {
+      display: flex;
+    }
+
+    .chat-messages {
+      flex: 3;
+      border-right: 1px solid #ccc;
+      padding-right: 20px;
+      height: 80vh;
+      overflow-y: scroll;
+    }
+
+    .chat-sidebar {
+      flex: 1;
+      padding-left: 20px;
+      height: 80vh;
+    }
+
+    .chat-sidebar .group-info {
+      margin-bottom: 20px;
+    }
+
+    .chat-sidebar .members-list {
+      height: 50%;
+      overflow-y: scroll;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+
+    .message-container {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+<div class="nk-container">
+  <!-- 头部 -->
+  <header class="bg-dark sticky-top" th:replace="index::header">
+  </header>
+
+  <!-- 内容 -->
+  <div class="main">
+    <div class="container chat-container">
+      <!-- 左侧消息区 -->
+      <div class="chat-messages" id="chatArea">
+        <!-- 消息将通过 JavaScript 动态插入 -->
+      </div>
+
+      <!-- 右侧群组信息和成员列表 -->
+      <div class="chat-sidebar">
+        <!-- 群组信息 -->
+        <div class="group-info">
+          <h6>Group Info:</h6>
+          <p><strong>Group Name:</strong> <span th:text="${group.name}">Default Group</span></p>
+          <p><strong>Owner:</strong> <span th:text="${group.ownerId}">Owner ID</span></p>
+          <p><strong>Capacity:</strong> <span th:text="${group.capacity}">0</span></p>
+        </div>
+
+        <!-- 群组成员列表 -->
+        <div class="members-list">
+          <h6>Members:</h6>
+          <ul class="list-unstyled" id="memberList">
+            <li th:each="member : ${members}">
+              <img th:src="${member.headerUrl}" class="mr-2 rounded-circle user-header" alt="用户头像">
+              <span th:text="${member.username}">Member Name</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 消息输入框 -->
+  <div class="fixed-bottom bg-light p-3" style="border-top: 1px solid #ccc;">
+    <div class="input-group">
+      <textarea class="form-control" id="message-text" placeholder="Enter message" rows="1"></textarea>
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" id="sendBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 尾部 -->
+  <footer class="bg-dark" th:replace="~{index::footer}">
+  </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script th:src="@{/js/global.js}"></script>
+<script th:src="@{/js/group.js}"></script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var thisHeader = /*[[${users.thisUser.headerUrl}]]*/ 'defaultHeaderUrl';
+  var thisUserId = /*[[${users.thisUser.id}]]*/ 'defaultUserId';
+  var members = /*[[${members}]]*/ [];
+  /*]]>*/
+</script>
+</body>
+</html>

@@ -18,6 +18,12 @@
         where chat_group.id = #{id} and user_group.group_id = #{id}
     </select>
 
+    <select id="selectByName" resultType="GeneralChatGroup">
+        select <include refid="selectFields"></include>, count(user_group.user_id) as count
+        from chat_group, user_group
+        where chat_group.name = #{name} and user_group.group_id = chat_group.id
+    </select>
+
     <select id="selectByownerId" resultType="GeneralChatGroup">
         select <include refid="selectFields"></include>, count(user_group.user_id) as count
         from chat_group, user_group

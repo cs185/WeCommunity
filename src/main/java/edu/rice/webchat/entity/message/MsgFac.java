@@ -13,8 +13,8 @@ public class MsgFac{
      * @return The vertical strategy
      */
 
-    public Message makeMsg(String content, User sender) {
+    public GroupMessage makeMsg(String content, User sender) {
         String id = prefix + nextId++;
-        return new Message(id, content, sender);
+        return new GroupMessage(id, content, sender);
     }
 }
