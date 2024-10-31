@@ -1,11 +1,13 @@
 package edu.rice.webchat;
 
 //import edu.rice.webchat.dao.DiscussPostMapper;
+import edu.rice.webchat.dao.DiscussPostMapper;
 import edu.rice.webchat.dao.GroupMapper;
 import edu.rice.webchat.dao.UserMapper;
 //import edu.rice.webchat.entity.DiscussPost;
 import edu.rice.webchat.entity.group.AChatGroup;
 import edu.rice.webchat.entity.group.GroupFac;
+import edu.rice.webchat.entity.post.DiscussPost;
 import edu.rice.webchat.entity.user.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +30,8 @@ public class MapperTests {
     @Autowired
     private GroupMapper groupMapper;
 
-//    @Autowired
-//    private DiscussPostMapper discussPostMapper;
+    @Autowired
+    private DiscussPostMapper discussPostMapper;
 
     @Test
     public void testSelectUser() {
@@ -49,6 +51,9 @@ public class MapperTests {
         System.out.println(group);
 
         group = groupMapper.selectByOwnerId(25);
+        System.out.println(group);
+
+        group = groupMapper.selectByName("Group 1");
         System.out.println(group);
     }
 
@@ -92,5 +97,16 @@ public class MapperTests {
 //
 //        groupMapper.addUserToGroup("nowcoder11", 2);
 //        groupMapper.addUserToGroup("nowcoder11", 3);
+    }
+
+    @Test
+    public void testSelectPosts() {
+        List<DiscussPost> list = discussPostMapper.selectDiscussPosts(149, 0, 10);
+        for(DiscussPost post : list) {
+            System.out.println(post);
+        }
+
+        int rows = discussPostMapper.selectDiscussPostRows(149);
+        System.out.println(rows);
     }
 }

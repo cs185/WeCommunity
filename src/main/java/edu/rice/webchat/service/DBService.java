@@ -4,10 +4,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import edu.rice.webchat.entity.message.Message;
-import edu.rice.webchat.repository.UserRepository;
+import edu.rice.webchat.entity.message.GroupMessage;
 import org.bson.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -38,7 +36,7 @@ public class DBService {
     }
 
 
-    public void addMsgToGroup(int group_id, Message msg, String senderName) {
+    public static void addMsgToGroup(int group_id, String content, String senderName) {
         try (MongoClient mongoClient = new MongoClient( "localhost" , 27017 )){
             MongoDatabase mongoDatabase = mongoClient.getDatabase("chatapp");
             MongoCollection<Document> collection = mongoDatabase.getCollection("chat_log");
@@ -46,8 +44,8 @@ public class DBService {
             Document doc = new Document("date", new Date())
                     .append("groupId", group_id)
                     .append("senderName", senderName)
-                    .append("message", msg.getContent())
-                    .append("type", msg.getStrategyType());
+                    .append("content", content)
+                    .append("type", "general");
 
             collection.insertOne(doc);
 
