@@ -7,68 +7,72 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<link rel="stylesheet" th:href="@{/css/letter.css}" />
-	<title>WeCommunity - Chat with</title>
+	<title>My Web Chat-Chat with</title>
 </head>
 <body>
-	<div class="nk-container">
-		<!-- 头部 -->
-		<header class="bg-dark sticky-top" th:replace="index::header">
-		</header>
+<div class="nk-container">
+	<!-- 头部 -->
+	<header class="bg-dark sticky-top" th:replace="index::header">
+	</header>
 
-		<!-- 内容 -->
-		<div class="main">
-			<div class="container">
-				<div class="row">
-					<div class="col-8">
-						<h6><b class="square"></b> Chat with <i class="text-success" th:utext="${users.targetUser.username}">Someone</i></h6>
-					</div>
-					<div class="col-4 text-right">
-						<button type="button" class="btn btn-secondary btn-sm" onclick="back();">Back</button>
-<!--						<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#sendModal">给TA私信</button>-->
-					</div>
+	<!-- 内容 -->
+	<div class="main">
+		<div class="container">
+			<div class="row">
+				<div class="col-8">
+					<h6><b class="square"></b> Chat with <i class="text-success" th:utext="${users.targetUser.username}">Someone</i></h6>
 				</div>
-
-				<ul class="list-unstyled mt-4" id="chatArea">
-				</ul>
-				<!-- 分页 -->
-<!--				<nav class="mt-5" th:replace="~{index::pagination}">-->
-<!--				</nav>-->
-			</div>
-		</div>
-
-		<div class="fixed-bottom bg-light p-3" style="border-top: 1px solid #ccc;">
-			<div class="input-group">
-				<textarea class="form-control" id="message-text" placeholder="Enter message" rows="1"></textarea>
-				<div class="input-group-append">
-					<button class="btn btn-primary" type="button" id="sendBtn">Send</button>
+				<div class="col-4 text-right">
+					<button type="button" class="btn btn-secondary btn-sm" onclick="back();">Back</button>
+					<!--						<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#sendModal">给TA私信</button>-->
 				</div>
 			</div>
-		</div>
 
-		<!-- 尾部 -->
-		<footer class="bg-dark" th:replace="~{index::footer}">
-		</footer>
+			<ul class="list-unstyled mt-4" id="chatArea">
+			</ul>
+			<!-- 分页 -->
+<!--			<nav class="mt-5" th:replace="~{index::pagination}">-->
+<!--			</nav>-->
+		</div>
 	</div>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script th:src="@{/js/global.js}"></script>
-	<script th:src="@{/js/letter.js}"></script>
-	<script th:inline="javascript">
-		/*<![CDATA[*/
-		var thisHeader = /*[[${users.thisUser.headerUrl}]]*/ 'defaultHeaderUrl';
-		var thisUserId = /*[[${users.thisUser.id}]]*/ 'defaultUserId';
+	<div class="fixed-bottom bg-light p-3" style="border-top: 1px solid #ccc;">
+		<div class="input-group">
+			<textarea class="form-control" id="message-text" placeholder="Enter message" rows="1"></textarea>
+			<div class="input-group-append">
+				<button class="btn btn-primary" type="button" id="sendBtn">Send</button>
+			</div>
+		</div>
+	</div>
 
-		var targetHeader = /*[[${users.targetUser.headerUrl}]]*/ 'defaultHeaderUrl';
-		var targetUserId = /*[[${users.targetUser.id}]]*/ 'defaultUserId';
+	<!-- 尾部 -->
+	<footer class="bg-dark" th:replace="~{index::footer}">
+	</footer>
+</div>
 
-		var letters = /*[[${letters}]]*/ [];
-		var users = /*[[${users}]]*/ [];
-		/*]]>*/
-	</script>
-	<script>
-		const webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/chatapp");
-	</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script th:src="@{/js/global.js}"></script>
+<script th:src="@{/js/letter.js}"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var thisHeader = /*[[${users.thisUser.headerUrl}]]*/ 'defaultHeaderUrl';
+	var thisUserId = /*[[${users.thisUser.id}]]*/ 'defaultUserId';
+
+	var targetHeader = /*[[${users.targetUser.headerUrl}]]*/ 'defaultHeaderUrl';
+	var targetUserId = /*[[${users.targetUser.id}]]*/ 'defaultUserId';
+
+	var letters = /*[[${letters}]]*/ [];
+	var users = /*[[${users}]]*/ [];
+	/*]]>*/
+</script>
+<script>
+	const webSocket = new WebSocket((location.protocol === "https:" ? "wss://" : "ws://") + location.hostname + ":" + location.port + CONTEXT_PATH + "/chatapp");
+
+	webSocket.onerror = (error) => {
+		console.error("WebSocket Error: ", error);
+	};
+</script>
 </body>
 </html>

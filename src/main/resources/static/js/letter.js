@@ -61,36 +61,15 @@ function send_letter() {
 	// whenever send, do 2 things: 1. send the message to target user in real time (websocket) 2. save to database (post)
 	if (content !== "") {
 		const textMessage = JSON.stringify({
-			type: "personal",
+			type: 4,
 			targetId: targetUserId,
 			message: content
 		});
 
 		webSocket.send(textMessage);
+		console.log("message sent!");
 	}
 
-	// todo: if send message to itself, don't do the post
-	// if (toName === $('#username').val())
-	// 	return;
-
-	$.post(
-		CONTEXT_PATH + "/letter/send",
-		{"toName": toName, "content": content},
-		function (data) {
-			data = $.parseJSON(data);
-			if (data.code == 0) {
-				// $("#hintBody").text("发送成功!");
-			} else {
-				$("#hintBody").text(data.msg);
-			}
-
-			$("#hintModal").modal("show");
-			setTimeout(function () {
-				$("#hintModal").modal("hide");
-				// location.reload();
-			}, 2000);
-		}
-	);
 }
 
 function delete_msg() {
