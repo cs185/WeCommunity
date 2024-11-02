@@ -1,8 +1,8 @@
 package edu.rice.wecommunity.service;
 
-import edu.rice.wecommunity.dao.MessageMapper;
 import edu.rice.wecommunity.dao.NoticeMapper;
 import edu.rice.wecommunity.entity.Message;
+import edu.rice.wecommunity.entity.Notice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +15,10 @@ public class NoticeService {
 
     public Message findLatestNotice(int userId, String topic) {
         return noticeMapper.selectLatestNotice(userId, topic);
+    }
+
+    public void addNotice(Notice notice) {
+        noticeMapper.insertNotice(notice);
     }
 
     public int findNoticeCount(int userId, String topic) {

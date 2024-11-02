@@ -34,7 +34,8 @@ CREATE TABLE `chat_group` (
   `create_time` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`),
-  KEY `index_owner` (`owner_id`)
+  KEY `index_owner` (`owner_id`),
+  KEY `index_capacity` (`capacity`);
 );
 
 INSERT INTO `chat_group` (`owner_id`, `name`, `capacity`, `create_time`)
@@ -72,6 +73,22 @@ CREATE TABLE `friendship` (
   FOREIGN KEY (`user_id2`) REFERENCES `user`(`id`),
   PRIMARY KEY (`user_id1`, `user_id2`),
   CHECK (`user_id1` != `user_id2`)
+);
+
+CREATE TABLE `notice` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `from_id` int DEFAULT NULL,
+  `topic` varchar(10) DEFAULT NULL COMMENT 'like;comment;follow;',
+  `to_id` int DEFAULT NULL,
+  `entity_type` int DEFAULT NULL,
+  `entity_id` int DEFAULT NULL,
+  `status` int DEFAULT NULL COMMENT '0-unread;1-read;2-deleted;',
+  `create_time` timestamp NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`from_id`) REFERENCES user(id),
+  FOREIGN KEY (`to_id`) REFERENCES user(id),
+  KEY `index_from_id` (`from_id`),
+  KEY `index_to_id` (`to_id`)
 );
 
 

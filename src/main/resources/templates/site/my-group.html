@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<title>WeCommunity - Profile</title>
+</head>
+<body>
+	<div class="nk-container">
+		<!-- Header -->
+		<header class="bg-dark sticky-top" th:replace="index::header">
+
+		</header>
+
+		<!-- Content -->
+		<div class="main">
+			<div class="container">
+				<div class="position-relative">
+					<!-- Options -->
+					<div class="position-relative">
+						<ul class="nav nav-tabs">
+							<li class="nav-item">
+								<a class="nav-link active" href="profile.html">Personal Information</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="my-post.html">My Posts</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="my-reply.html">My Comments</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" th:href="/group/list">My Groups</a>
+							</li>
+						</ul>
+					</div>
+					<a th:href="@{|/user/profile/${userId}|}" class="text-muted position-absolute rt-0">Return to Profile &gt;</a>
+				</div>
+
+				<!-- Group List -->
+				<label for="group-name"></label><input id="group-name">
+				<button type="button" id="btn-create">Create Group</button>
+				<ul class="list-unstyled">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:each="group:${groups}">
+						<a th:href="@{|/group/${group.id}|}">
+							<img th:src="/user/header/group.jpg" class="mr-4 rounded-circle user-header" alt="User Avatar" >
+						</a>
+						<div class="media-body">
+							<h6 class="mt-0 mb-3">
+								<span class="text-success" th:utext="${group.name}">Chat Group</span>
+								<span class="float-right text-muted font-size-12">
+									Joined on <i th:text="${#dates.format(group.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</i>
+								</span>
+							</h6>
+							<div>
+								<input type="hidden" id="entityId" th:value="${group.id}">
+								<button type="button" th:href="@{|/group/${group.id}|}">Enter</button>
+								<button type="button" th:class="|btn ${group.ownerId==userId?'btn-secondary':'btn-info'} btn-sm float-right leave-btn|"
+										th:text="${group.ownerId==userId?'Leave':'Delete'}">Leave</button>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<!-- Pagination -->
+				<nav class="mt-5" th:replace="index::pagination">
+
+				</nav>
+			</div>
+		</div>
+
+		<!-- 尾部 -->
+		<footer class="bg-dark" th:replace="index::footer">
+
+		</footer>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script th:src="@{/js/group-list.js}"></script>
+</body>
+</html>

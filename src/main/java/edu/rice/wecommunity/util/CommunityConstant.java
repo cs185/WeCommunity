@@ -53,6 +53,11 @@ public interface CommunityConstant {
     int ENTITY_TYPE_GROUP = 5;
 
     /**
+     * 主题: 加入组请求
+     */
+    String TOPIC_REQUEST = "request";
+
+    /**
      * 主题: 评论
      */
     String TOPIC_COMMENT = "comment";

@@ -12,6 +12,8 @@ public class RedisKeyUtil {
     private static final String PREFIX_USER = "user";
     private static final String PREFIX_UV = "uv";
     private static final String PREFIX_DAU = "dau";
+    private static final String PREFIX_GROUP = "group";
+    private static final String PREFIX_USER_GROUP = "group:user";
 
     // 某个实体的赞
     // like:entity:entityType:entityId -> set(userId)
@@ -70,6 +72,14 @@ public class RedisKeyUtil {
     // 区间活跃用户
     public static String getDAUKey(String startDate, String endDate) {
         return PREFIX_DAU + SPLIT + startDate + SPLIT + endDate;
+    }
+
+    public static String getGroupKey(int groupId) {
+        return PREFIX_GROUP + SPLIT + groupId;
+    }
+
+    public static String getUserGroupKey(int userId) {
+        return PREFIX_USER_GROUP + SPLIT + userId;
     }
 
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import edu.rice.wecommunity.entity.Event;
 import edu.rice.wecommunity.entity.Message;
 import edu.rice.wecommunity.entity.DiscussPost;
+import edu.rice.wecommunity.entity.Notice;
 import edu.rice.wecommunity.service.*;
 import edu.rice.wecommunity.service.DiscussPostService;
 import edu.rice.wecommunity.service.ElasticsearchService;
@@ -30,10 +31,16 @@ public class EventConsumer implements CommunityConstant {
     private MessageService messageService;
 
     @Autowired
+    private NoticeService noticeService;
+
+    @Autowired
     private DiscussPostService discussPostService;
 
     @Autowired
     private ElasticsearchService elasticsearchService;
+
+    @Autowired
+    private GroupService groupService;
 
 //    @Autowired
 //    private GroupService groupService;
@@ -52,25 +59,15 @@ public class EventConsumer implements CommunityConstant {
         }
 
         // 发送站内通知
-        Message message = new Message();
-        message.setFromId(SYSTEM_USER_ID);
-        message.setToId(event.getEntityUserId());
-        message.setConversationId(event.getTopic());
-        message.setCreateTime(new Date());
+        Notice notice = new Notice();
+        notice.setFromId(event.getUserId());
+        notice.setToId(event.getEntityUserId());
+        notice.setTopic(event.getTopic());
+        notice.setEntityType(event.getEntityType());
+        notice.setEntityId(event.getEntityId());
+        notice.setCreateTime(new Date());
 
-        Map<String, Object> content = new HashMap<>();
-        content.put("userId", event.getUserId());
-        content.put("entityType", event.getEntityType());
-        content.put("entityId", event.getEntityId());
-
-        if (!event.getData().isEmpty()) {
-            for (Map.Entry<String, Object> entry : event.getData().entrySet()) {
-                content.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        message.setContent(JSONObject.toJSONString(content));
-        messageService.addMessage(message);
+        noticeService.addNotice(notice);
     }
 
     @KafkaListener(topics = {TOPIC_PUBLISH})
@@ -122,8 +119,8 @@ public class EventConsumer implements CommunityConstant {
 
         int targetId = (int) event.getData().get("targetId");
         String content = (String) event.getData().get("content");
+        Message message = new Message();
         if (event.getEntityType() == ENTITY_TYPE_CHAT) {
-            Message message = new Message();
             message.setFromId(event.getUserId());
             message.setToId(targetId);
             if (message.getFromId() < message.getToId()) {
@@ -133,12 +130,14 @@ public class EventConsumer implements CommunityConstant {
             }
             message.setContent(content);
             message.setCreateTime(new Date());
-            messageService.addMessage(message);
-//            DBService.addMsgToPerson(targetId, content, "targetId");
         }
         else {
-//            groupService.sendGroupMessage(event.getUserId(), content, targetId);
-//            DBService.addMsgToGroup(targetId, content, "targetId");
+            message.setFromId(event.getUserId());
+            message.setToId(targetId);
+            message.setConversationId("_");
+            message.setContent(content);
+            message.setCreateTime(new Date());
         }
+        messageService.addMessage(message);
     }
 }

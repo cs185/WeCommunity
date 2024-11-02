@@ -5,40 +5,50 @@
 <mapper namespace="edu.rice.wecommunity.dao.NoticeMapper">
 
     <sql id="selectFields">
-        id, from_id, to_id, conversation_id, content, status, create_time
+        id, from_id, to_id, topic, entity_type, entity_id, status, create_time
     </sql>
 
     <sql id="insertFields">
-        from_id, to_id, conversation_id, content, status, create_time
+        from_id, to_id, topic, entity_type, entity_id, status, create_time
     </sql>
 
-    <select id="selectLatestNotice" resultType="Message">
+    <select id="selectLatestNotice" resultType="Notice">
         select <include refid="selectFields"></include>
-        from message
+        from notice
         where id in (
-        select max(id) from message
+        select max(id) from notice
         where status != 2
-        and from_id = 1
         and to_id = #{userId}
-        and conversation_id = #{topic}
+        and topic = #{topic}
         )
     </select>
+
+    <insert id="insertNotice" parameterType="Notice" keyProperty="id">
+        insert into message(<include refid="insertFields"></include>)
+        values(#{fromId},#{toId},#{topic},#{entityType},#{entityId},#{status},#{createTime})
+    </insert>
+
+    <insert id="batchInsertNotices" parameterType="java.util.List">
+        INSERT INTO notice (id, from_id, to_id, topic, entity_type, entity_id, status, create_time)
+        VALUES
+        <foreach collection="noticeList" item="notice" separator=",">
+            (#{notice.id}, #{notice.fromId}, #{notice.toId}, #{notice.topic}, #{notice.entityType}, #{notice.entityId}, #{notice.status}, #{notice.createTime})
+        </foreach>
+    </insert>
 
     <select id="selectNoticeCount" resultType="int">
         select count(id) from message
         where status != 2
-        and from_id = 1
         and to_id = #{userId}
-          and conversation_id = #{topic}
+        and topic = #{topic}
     </select>
 
     <select id="selectNoticeUnreadCount" resultType="int">
         select count(id) from message
         where status = 0
-        and from_id = 1
         and to_id = #{userId}
         <if test="topic!=null">
-            and conversation_id = #{topic}
+            and topic = #{topic}
         </if>
     </select>
 
@@ -46,9 +56,8 @@
         select <include refid="selectFields"></include>
         from message
         where status != 2
-        and from_id = 1
         and to_id = #{userId}
-        and conversation_id = #{topic}
+        and topic = #{topic}
         order by create_time desc
         limit #{offset}, #{limit}
     </select>

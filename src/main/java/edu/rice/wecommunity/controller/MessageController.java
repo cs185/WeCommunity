@@ -2,9 +2,11 @@ package edu.rice.wecommunity.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import edu.rice.wecommunity.annotation.LoginRequired;
+import edu.rice.wecommunity.entity.Group;
 import edu.rice.wecommunity.entity.Message;
 import edu.rice.wecommunity.entity.Page;
 import edu.rice.wecommunity.entity.User;
+import edu.rice.wecommunity.service.GroupService;
 import edu.rice.wecommunity.service.MessageService;
 import edu.rice.wecommunity.service.NoticeService;
 import edu.rice.wecommunity.service.UserService;
@@ -36,6 +38,9 @@ public class MessageController {
 
     @Autowired
     private NoticeService noticeService;
+
+    @Autowired
+    private GroupService groupService;
 
     // 私信列表
     @LoginRequired
@@ -69,6 +74,26 @@ public class MessageController {
                 conversations.add(map);
             }
         }
+
+        // add group conversations
+        List<Message> groupConversationList = messageService.findGroupConversations(user.getId(), page.getOffset(), page.getLimit());
+        if (groupConversationList != null) {
+            for (Message groupMsg : groupConversationList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("conversation", groupMsg);
+                map.put("letterCount", messageService.findLetterCount(groupMsg.getToId()));
+                unreadCount = messageService.findLetterUnreadCount(user.getId(), groupMsg.getToId());
+                map.put("unreadCount", unreadCount);
+                letterUnreadCount += unreadCount;
+
+                map.put("target", null);
+                map.put("groupId", groupMsg.getToId());
+                map.put("groupName", groupService.getGroup(groupMsg.getToId()).getName());
+
+                conversations.add(map);
+            }
+        }
+
         model.addAttribute("conversations", conversations);
 
         // 查询未读消息数量
@@ -86,7 +111,8 @@ public class MessageController {
         // 分页信息
         page.setLimit(100);
         page.setPath("/letter/detail/" + conversationId);
-        page.setRows(messageService.findLetterCount(conversationId));
+//        page.setRows(messageService.findLetterCount(conversationId));
+        page.setRows(messageService.findLetterCount(100));
 
         String[] strIds = conversationId.split("_");
         int id0 = Integer.parseInt(strIds[0]);

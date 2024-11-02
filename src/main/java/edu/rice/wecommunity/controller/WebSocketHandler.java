@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import edu.rice.wecommunity.entity.Event;
 import edu.rice.wecommunity.entity.User;
 import edu.rice.wecommunity.event.EventProducer;
+import edu.rice.wecommunity.service.GroupService;
 import edu.rice.wecommunity.service.MessageService;
 import edu.rice.wecommunity.util.CommunityConstant;
 import edu.rice.wecommunity.util.WebSocketSessionMap;
@@ -31,6 +32,9 @@ public class WebSocketHandler extends TextWebSocketHandler implements CommunityC
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private GroupService groupService;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession wsSession) throws Exception {
 //        Map<String, Object> attributes = wsSession.getAttributes();
@@ -48,7 +52,7 @@ public class WebSocketHandler extends TextWebSocketHandler implements CommunityC
 
     @Override
     protected void handleTextMessage(WebSocketSession wsSession, TextMessage message) throws Exception {
-//        String groupId = getGroupIdFromSession(wsSession);
+        String groupId = getGroupIdFromSession(wsSession);
         User sender = (User) wsSession.getAttributes().get("user");
         JsonObject msgJson = JsonParser.parseString(message.getPayload()).getAsJsonObject();
         int targetId = Integer.parseInt(String.valueOf(msgJson.get("targetId")));
@@ -56,10 +60,9 @@ public class WebSocketHandler extends TextWebSocketHandler implements CommunityC
         int type = Integer.parseInt(String.valueOf(msgJson.get("type")));
 
         if (type == ENTITY_TYPE_GROUP) {
-//            type = wecommunityUtil.ENTITY_TYPE_GROUP;
-//            userService.sendGroupMessage(sender.getUsername(),
-//                    message.getPayload(),
-//                    Integer.parseInt(groupId));
+            groupService.sendGroupMessage(sender.getId(),
+                    message.getPayload(),
+                    Integer.parseInt(groupId));
         }
         // else it is a personal chat
         else {

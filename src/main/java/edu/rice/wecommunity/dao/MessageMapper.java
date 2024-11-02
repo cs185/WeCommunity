@@ -9,7 +9,11 @@ import java.util.List;
 public interface MessageMapper {
 
     // 查询当前用户的会话列表,针对每个会话只返回一条最新的私信.
+    List<Message> findNotices();
+
     List<Message> selectConversations(int userId, int offset, int limit);
+
+    List<Message> selectGroupConversations(int userId, int offset, int limit);
 
     // 查询当前用户的会话数量.
     int selectConversationCount(int userId);
@@ -20,6 +24,8 @@ public interface MessageMapper {
     // 查询某个会话所包含的私信数量.
     int selectLetterCount(String conversationId);
 
+    int selectGroupLetterCount(int groupId);
+
     // 查询未读私信的数量
     int selectLetterUnreadCount(int userId, String conversationId);
 
@@ -29,4 +35,7 @@ public interface MessageMapper {
     // 修改消息的状态
     int updateStatus(List<Integer> ids, int status);
 
+    int selectGroupLetterUnreadCount(int userId, int groupId);
+
+    List<Message> selectGroupLetters(int groupId, int offset, int limit);
 }

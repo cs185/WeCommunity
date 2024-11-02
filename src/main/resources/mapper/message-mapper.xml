@@ -12,6 +12,10 @@
         from_id, to_id, conversation_id, content, status, create_time
     </sql>
 
+    <select id="findNotices" resultType="Message">
+        SELECT <include refid="selectFields"></include> FROM chatapp.message where from_id = 1;
+    </select>
+
     <select id="selectConversations" resultType="Message">
         select <include refid="selectFields"></include>
         from message
@@ -21,6 +25,20 @@
         and from_id != 1
         and (from_id = #{userId} or to_id = #{userId})
         group by conversation_id
+        )
+        order by id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="selectGroupConversations" resultType="Message">
+        select <include refid="selectFields"></include>
+        from message
+        where id in (
+        select max(id) from message
+        where status != 2
+        and conversation_id = '_'
+        and from_id = #{userId}
+        group by to_id
         )
         order by id desc
         limit #{offset}, #{limit}
@@ -53,6 +71,22 @@
         and conversation_id = #{conversationId}
     </select>
 
+    <select id="selectGroupLetters" resultType="Message">
+        select <include refid="selectFields"></include> from message
+        where status != 2
+        and conversation_id = '_'
+        and to_id = #{groupId}
+        order by id
+    </select>
+
+    <select id="selectGroupLetterCount" resultType="int">
+        select count(id)
+        from message
+        where status != 2
+        and to_id = #{groupId}
+        and conversation_id = '_'
+    </select>
+
     <select id="selectLetterUnreadCount" resultType="int">
         select count(id)
         from message
@@ -62,6 +96,14 @@
         <if test="conversationId!=null">
             and conversation_id = #{conversationId}
         </if>
+    </select>
+
+    <select id="selectGroupLetterUnreadCount" resultType="int">
+        select count(id)
+        from message
+        where status = 0
+        and from_id = #{userId}
+        and to_id = #{groupId}
     </select>
 
     <insert id="insertMessage" parameterType="Message" keyProperty="id">

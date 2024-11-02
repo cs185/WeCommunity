@@ -38,6 +38,11 @@ public class MessageService {
         return messageMapper.selectConversations(userId, offset, limit);
     }
 
+    public List<Message> findGroupConversations(int userId, int offset, int limit) {
+        // the latest messages from the groups that the user is in
+        return messageMapper.selectGroupConversations(userId, offset, limit);
+    }
+
     public int findConversationCount(int userId) {
         return messageMapper.selectConversationCount(userId);
     }
@@ -46,12 +51,23 @@ public class MessageService {
         return messageMapper.selectLetters(conversationId1, conversationId2, offset, limit);
     }
 
+    public List<Message> findLetters(int groupId, int offset, int limit) {
+        return messageMapper.selectGroupLetters(groupId, offset, limit);
+    }
+
     public int findLetterCount(String conversationId) {
         return messageMapper.selectLetterCount(conversationId);
     }
 
+    public int findLetterCount(int groupId) {
+        return messageMapper.selectGroupLetterCount(groupId);
+    }
     public int findLetterUnreadCount(int userId, String conversationId) {
         return messageMapper.selectLetterUnreadCount(userId, conversationId);
+    }
+
+    public int findLetterUnreadCount(int userId, int groupId) {
+        return messageMapper.selectGroupLetterUnreadCount(userId, groupId);
     }
 
     public int addMessage(Message message) {

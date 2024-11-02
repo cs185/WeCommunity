@@ -16,6 +16,8 @@ public class CommunityApplication {
     }
 
     public static void main(String[] args) {
+//        String version = System.getProperty("java.version");
+//        System.out.println("Java Runtime Version: " + version);
         SpringApplication.run(CommunityApplication.class, args);
     }
 

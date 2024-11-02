@@ -6,8 +6,8 @@
 	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
-	<link rel="stylesheet" th:href="@{/css/letter.css}" />
-	<title>My Web Chat - Chat</title>
+	<link rel="stylesheet" th:href="@{/css/group.css}" />
+	<title>My Web Chat - Group Chat</title>
 </head>
 <body>
 <div class="nk-container">
@@ -20,22 +20,40 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-8">
-					<h6><b class="square"></b> Chat with <i class="text-success" th:utext="${users.targetUser.username}">Someone</i></h6>
+					<h6><b class="square"></b> <i class="text-success" th:text="${group.name}">Group Name</i></h6>
 				</div>
 				<div class="col-4 text-right">
 					<button type="button" class="btn btn-secondary btn-sm" onclick="back();">Back</button>
-					<!--						<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#sendModal">给TA私信</button>-->
 				</div>
+				<input type="hidden" id="group-id" th:value="${group.id}">
 			</div>
 
-			<ul class="list-unstyled mt-4" id="chatArea">
-			</ul>
-			<!-- 分页 -->
-<!--			<nav class="mt-5" th:replace="~{index::pagination}">-->
-<!--			</nav>-->
+			<div class="row mt-4">
+				<!-- 群组成员列表 -->
+				<div class="col-3">
+					<h6>Members</h6>
+					<ul class="list-unstyled" id="memberList">
+						<!-- 群组成员 -->
+						<li th:each="member : ${members}" class="media mb-3">
+							<img th:src="${member.headerUrl}" class="mr-3 rounded-circle user-header" alt="用户头像">
+							<div class="media-body">
+								<h6 class="mt-0" th:text="${member.username}">Username</h6>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<!-- 聊天内容区域 -->
+				<div class="col-9">
+					<ul class="list-unstyled" id="chatArea">
+						<!-- 使用 JS 动态加载聊天内容 -->
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 
+	<!-- 输入框 -->
 	<div class="fixed-bottom bg-light p-3" style="border-top: 1px solid #ccc;">
 		<div class="input-group">
 			<textarea class="form-control" id="message-text" placeholder="Enter message" rows="1"></textarea>
@@ -54,21 +72,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 <script th:src="@{/js/global.js}"></script>
-<script th:src="@{/js/letter.js}"></script>
+<script th:src="@{/js/group-letter.js}"></script>
 <script th:inline="javascript">
 	/*<![CDATA[*/
-	var thisHeader = /*[[${users.thisUser.headerUrl}]]*/ 'defaultHeaderUrl';
-	var thisUserId = /*[[${users.thisUser.id}]]*/ 'defaultUserId';
-
-	var targetHeader = /*[[${users.targetUser.headerUrl}]]*/ 'defaultHeaderUrl';
-	var targetUserId = /*[[${users.targetUser.id}]]*/ 'defaultUserId';
-
+	var thisUserId = /*[[${user.id}]]*/ 'defaultUserId';
+	var thisHeader = /*[[${user.headerUrl}]]*/ 'defaultHeaderUrl';
+	var group = /*[[${group}]]*/ {};
+	var members = /*[[${members}]]*/ [];
 	var letters = /*[[${letters}]]*/ [];
-	var users = /*[[${users}]]*/ [];
 	/*]]>*/
 </script>
 <script>
-	const webSocket = new WebSocket((location.protocol === "https:" ? "wss://" : "ws://") + location.hostname + ":" + location.port + CONTEXT_PATH + "/chatapp");
+	const webSocket = new WebSocket((location.protocol === "https:" ? "wss://" : "ws://") + location.hostname + ":" + location.port + CONTEXT_PATH + "/chatapp?groupId=" + $("#group-id").val());
 
 	webSocket.onerror = (error) => {
 		console.error("WebSocket Error: ", error);
