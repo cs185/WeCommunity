@@ -25,10 +25,11 @@ import java.util.Set;
 
 @Service
 public class GroupService {
+    @Autowired
     private GroupMapper groupMapper;
 
     @Autowired
-    private MessageService messageService;
+    private UserService userService;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -44,7 +45,7 @@ public class GroupService {
     }
 
     public List<Group> getUserGroups(int userId) {
-        return getUserGroupIds(userId).stream().map(groupMapper::selectById).toList();
+        return getUserGroupIds(userId);
     }
 
     public User getGroupOwner(int groupId) {
@@ -80,11 +81,19 @@ public class GroupService {
 //    }
 
     public void sendGroupMessage(int userId, String content, int groupId) {
-        webSocketSessionMap.getGroupSessions(groupId).stream().filter(WebSocketSession::isOpen).forEach(chatSession -> {
+        User user = userService.findUserById(userId);
+
+        webSocketSessionMap.getGroupSessions(groupId).stream().
+                filter(WebSocketSession::isOpen).filter(chatSession -> {
+                    User sender = (User) chatSession.getAttributes().get("user");
+                    return sender.getId() != userId;
+                }).
+                forEach(chatSession -> {
             try {
                 JsonObject jo = new JsonObject();
                 jo.addProperty("content", content);
-                jo.addProperty("userId", userId);
+                jo.addProperty("id", user.getId());
+                jo.addProperty("header", user.getHeaderUrl());
                 chatSession.sendMessage(new TextMessage(jo.toString()));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -93,7 +102,12 @@ public class GroupService {
         });
     }
 
-    public Set<Integer> getUserGroupIds(int userId) {
+    public List<Group> getUserGroupIds(int userId) {
+        return groupMapper.selectGroupsById(userId);
+    }
+
+    @Deprecated
+    public Set<Integer> getUserGroupIdsCahce(int userId) {
         String groupKey = RedisKeyUtil.getUserGroupKey(userId);
         return (Set<Integer>) redisTemplate.opsForZSet().reverseRange(groupKey, 0, -1);
     }

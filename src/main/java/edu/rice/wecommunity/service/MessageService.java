@@ -62,6 +62,7 @@ public class MessageService {
     public int findLetterCount(int groupId) {
         return messageMapper.selectGroupLetterCount(groupId);
     }
+
     public int findLetterUnreadCount(int userId, String conversationId) {
         return messageMapper.selectLetterUnreadCount(userId, conversationId);
     }

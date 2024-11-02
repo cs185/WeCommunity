@@ -56,13 +56,11 @@ public class WebSocketHandler extends TextWebSocketHandler implements CommunityC
         User sender = (User) wsSession.getAttributes().get("user");
         JsonObject msgJson = JsonParser.parseString(message.getPayload()).getAsJsonObject();
         int targetId = Integer.parseInt(String.valueOf(msgJson.get("targetId")));
-        String content = String.valueOf(msgJson.get("message"));
+        String content = String.valueOf(msgJson.get("message")).replaceAll("^\"|\"$", "");;
         int type = Integer.parseInt(String.valueOf(msgJson.get("type")));
 
         if (type == ENTITY_TYPE_GROUP) {
-            groupService.sendGroupMessage(sender.getId(),
-                    message.getPayload(),
-                    Integer.parseInt(groupId));
+            groupService.sendGroupMessage(sender.getId(), content, Integer.parseInt(groupId));
         }
         // else it is a personal chat
         else {
@@ -75,7 +73,7 @@ public class WebSocketHandler extends TextWebSocketHandler implements CommunityC
                 .setEntityType(type)
 //                .setEntityId(id)
                 .setData("targetId", targetId)
-                .setData("content", msgJson.get("content"));
+                .setData("content", content);
 
         eventProducer.fireEvent(event);
     }

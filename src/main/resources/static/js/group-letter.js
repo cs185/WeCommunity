@@ -2,7 +2,7 @@ window.onload = function() {
 	webSocket.onclose = () => alert("WebSocket connection closed");
 	webSocket.onmessage = (msg) => {
 		const data = JSON.parse(msg.data);
-		updateChatRoom(data.message, data.header, data.userId);
+		updateChatRoom(data.content, data.header, data.id);
 	};
 };
 
@@ -54,14 +54,13 @@ function sendMessage() {
 	// Send message to WebSocket server and database
 	if (content !== "") {
 		const textMessage = JSON.stringify({
-			type: "group",
-			groupId: group.id,
-			userId: thisUserId,
+			type: 5,
+			targetId: group.id,
 			message: content
 		});
 
 		webSocket.send(textMessage);
-		console.log("Message sent to group!");
+		console.log("Message sent to group! " + textMessage);
 	}
 }
 

@@ -42,13 +42,10 @@
         WHERE user_group.user_id = #{user_id} AND chat_group.id = user_group.group_id;
     </select>
 
-    <select id="selectGroups" resultType="Group">
-        select <include refid="selectFields"></include>, COUNT(DISTINCT user_group.user_id) AS count
-        from chat_group
+    <select id="selectGroupsById" resultType="Group">
+        SELECT <include refid="selectFields"></include> FROM chat_group
         JOIN user_group ON user_group.group_id = chat_group.id
-        JOIN user ON user.id = user_group.user_id
-        GROUP BY <include refid="selectFields"></include>
-        HAVING SUM(user.username = #{username}) > 0;
+        WHERE user_group.user_id = #{userId};
     </select>
 
     <insert id="insertGroup" parameterType="Group" useGeneratedKeys="true" keyProperty="id">
@@ -107,7 +104,7 @@
         WHERE user_group.group_id = #{group_id};
     </select>
 
-    <select id="selectGroupCount">
+    <select id="selectGroupCapacity">
         SELECT chat_group.capacity FROM chat_group
         WHERE chat_group.group_id = #{group_id};
     </select>

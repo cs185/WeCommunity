@@ -32,7 +32,7 @@
 								<a class="nav-link" href="my-reply.html">My Comments</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" th:href="/group/list">My Groups</a>
+								<a class="nav-link" th:href="@{/group/list}">My Groups</a>
 							</li>
 						</ul>
 					</div>
@@ -45,18 +45,19 @@
 				<ul class="list-unstyled">
 					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:each="group:${groups}">
 						<a th:href="@{|/group/${group.id}|}">
-							<img th:src="/user/header/group.jpg" class="mr-4 rounded-circle user-header" alt="User Avatar" >
+							<img th:src="@{/user/header/group.jpg}" class="mr-4 rounded-circle user-header" alt="User Avatar" >
 						</a>
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
-								<span class="text-success" th:utext="${group.name}">Chat Group</span>
+								<a th:href="@{|/group/${group.id}|}">
+									<span class="text-success" th:utext="${group.name}">Chat Group</span>
+								</a>
 								<span class="float-right text-muted font-size-12">
 									Joined on <i th:text="${#dates.format(group.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</i>
 								</span>
 							</h6>
 							<div>
 								<input type="hidden" id="entityId" th:value="${group.id}">
-								<button type="button" th:href="@{|/group/${group.id}|}">Enter</button>
 								<button type="button" th:class="|btn ${group.ownerId==userId?'btn-secondary':'btn-info'} btn-sm float-right leave-btn|"
 										th:text="${group.ownerId==userId?'Leave':'Delete'}">Leave</button>
 							</div>
@@ -64,9 +65,9 @@
 					</li>
 				</ul>
 				<!-- Pagination -->
-				<nav class="mt-5" th:replace="index::pagination">
+<!--				<nav class="mt-5" th:replace="index::pagination">-->
 
-				</nav>
+<!--				</nav>-->
 			</div>
 		</div>
 

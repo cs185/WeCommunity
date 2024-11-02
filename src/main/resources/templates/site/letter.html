@@ -86,7 +86,7 @@
 						<img th:src="${map.target.headerUrl}" th:if="${map.target!=null}" class="mr-4 rounded-circle user-header" alt="User Avatar">
 					</a>
 					<a th:href="@{|/group/${map.groupId}|}" th:if="${map.target==null}">
-						<img th:src="/user/header/group.jpg" th:if="${map.target==null}" class="mr-4 rounded-circle user-header" alt="User Avatar">
+						<img th:src="@{/user/header/group.jpg}" th:if="${map.target==null}" class="mr-4 rounded-circle user-header" alt="User Avatar">
 					</a>
 					<div class="media-body">
 						<h6 class="mt-0 mb-3">

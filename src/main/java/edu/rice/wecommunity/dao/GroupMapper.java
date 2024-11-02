@@ -19,7 +19,7 @@ public interface GroupMapper {
 
     List<Integer> selectGroupIdsByUserId(int user_id);
 
-    List<Group> selectGroups(String username);
+    List<Group> selectGroupsById(int userId);
 
     Group insertGroup(Group group);
 
