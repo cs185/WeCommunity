@@ -8,7 +8,7 @@ Working on the deployment ...
 
 ### System Architecture Diagram
 
-![System Architecture Design](images/Architecture.png "System Architecture Design")
+![System Architecture Design](docs/images/Architecture.png "System Architecture Design")
 
 
 ### Feature Description
