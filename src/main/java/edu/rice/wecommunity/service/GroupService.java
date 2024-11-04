@@ -73,6 +73,7 @@ public class GroupService {
                 jo.addProperty("content", content);
                 jo.addProperty("id", user.getId());
                 jo.addProperty("header", user.getHeaderUrl());
+                jo.addProperty("senderName", user.getUsername());
                 chatSession.sendMessage(new TextMessage(jo.toString()));
             } catch (Exception e) {
                 e.printStackTrace();

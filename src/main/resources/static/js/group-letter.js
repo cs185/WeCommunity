@@ -2,20 +2,21 @@ window.onload = function() {
 	webSocket.onclose = () => alert("WebSocket connection closed");
 	webSocket.onmessage = (msg) => {
 		const data = JSON.parse(msg.data);
-		updateChatRoom(data.content, data.header, data.id);
+		updateChatRoom(data.content, data.header, data.id, data.senderName);
 	};
 };
 
 document.addEventListener("DOMContentLoaded", function() {
 	letters.forEach(function(letter) {
 		const msgContent = letter.letter.content;
-		const header = letter.fromUser.id === thisUserId ? thisHeader : letter.fromUser.headerUrl;
+		const header = letter.fromUser.headerUrl;
 		const userId = letter.fromUser.id;
-		updateChatRoom(msgContent, header, userId);
+		const userName = letter.fromUser.username;
+		updateChatRoom(msgContent, header, userId, userName);
 	});
 });
 
-function updateChatRoom(msgContent, header, userId) {
+function updateChatRoom(msgContent, header, userId, userName) {
 	const chatArea = document.getElementById('chatArea');
 	const li = document.createElement('li');
 	li.className = "media mb-3 " + (userId === thisUserId ? "message-right" : "message-left");
@@ -26,7 +27,7 @@ function updateChatRoom(msgContent, header, userId) {
 		</a>
 		<div class="toast show d-lg-block message-content ${userId === thisUserId ? "message-content-right" : "message-content-left"}" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="toast-header">
-				<strong class="mr-auto">${userId}</strong>
+				<strong class="mr-auto">${userName}</strong>
 				<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -49,7 +50,7 @@ function sendMessage() {
 	document.getElementById("message-text").value = '';
 
 	// Display message in chat room immediately
-	updateChatRoom(content, thisHeader, thisUserId);
+	updateChatRoom(content, thisHeader, thisUserId, thisUsername);
 
 	// Send message to WebSocket server and database
 	if (content !== "") {

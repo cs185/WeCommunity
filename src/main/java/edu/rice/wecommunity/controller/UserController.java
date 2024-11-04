@@ -145,6 +145,12 @@ public class UserController implements CommunityConstant {
         }
         model.addAttribute("hasFollowed", hasFollowed);
 
+        boolean hasFollowedAsWell = false;
+        if (hostHolder.getUser() != null) {
+            hasFollowedAsWell = followService.hasFollowed(userId, ENTITY_TYPE_USER, hostHolder.getUser().getId());
+        }
+        model.addAttribute("hasFollowedAsWell", hasFollowedAsWell);
+
         return "site/profile";
     }
 

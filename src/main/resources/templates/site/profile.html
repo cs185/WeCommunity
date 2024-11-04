@@ -20,18 +20,18 @@
 			<div class="container">
 				<!-- 选项 -->
 				<div class="position-relative">
-					<ul class="nav nav-tabs">
+					<ul class="nav nav-tabs" th:if="${user.id==thisUser.id}">
 						<li class="nav-item">
 							<a class="nav-link active" href="profile.html">Personal Information</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" th:if="${user.id==thisUser.id}" href="my-post.html">My Posts</a>
+							<a class="nav-link" href="my-post.html">My Posts</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" th:if="${user.id==thisUser.id}" href="my-reply.html">My Comments</a>
+							<a class="nav-link" href="my-reply.html">My Comments</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" th:if="${user.id==thisUser.id}" th:href="@{/group/list}">My Groups</a>
+							<a class="nav-link" th:href="@{/group/list}">My Groups</a>
 						</li>
 					</ul>
 				</div>
@@ -41,9 +41,12 @@
 					<div class="media-body">
 						<h5 class="mt-0 text-warning">
 							<span th:utext="${user.username}">nowcoder</span>
-							<input type="hidden" id="entityId" th:value="${user.id}">
+							<input type="hidden" id="entityId" th:value="${user.id}"rx>
 							<button type="button" th:class="|btn ${hasFollowed?'btn-secondary':'btn-info'} btn-sm float-right mr-5 follow-btn|"
 									th:text="${hasFollowed?'Followed':'Follow'}" th:if="${loginUser!=null&&loginUser.id!=user.id}">Follow</button>
+
+							<button type="button" th:if="${hasFollowed && hasFollowedAsWell}" class="btn btn-secondary btn-sm"
+									onclick="redirectToMessage()">Message</button>
 						</h5>
 						<div class="text-muted mt-3">
 							<span>Joined WeCommunity at <i class="text-muted" th:text="${#dates.format(user.createTime,'yyyy-MM-dd HH:mm:ss')}">2015-06-12 15:20:12</i></span>
@@ -69,5 +72,13 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 	<script th:src="@{/js/global.js}"></script>
 	<script th:src="@{/js/profile.js}"></script>
+
+	<script th:inline="javascript">
+		function redirectToMessage() {
+			// 使用 Thymeleaf 解析 URL，并动态传入参数
+			const url = /*[[@{/letter/detail/{id}(id=${loginUser.id < user.id ? loginUser.id + '_' + user.id : user.id + '_' + loginUser.id})}]]*/ '';
+			window.location.href = url;
+		}
+	</script>
 </body>
 </html>

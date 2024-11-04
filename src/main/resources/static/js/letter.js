@@ -1,22 +1,20 @@
 window.onload = function() {
 
 	webSocket.onclose = () => alert("WebSocket connection closed");
-	webSocket.onmessage = (msg) => updateChatRoom (msg.data, targetHeader, targetUserId);
+	webSocket.onmessage = (msg) => updateChatRoom (msg.data, targetHeader, targetUserId, targetUserName);
 };
 
 document.addEventListener("DOMContentLoaded", function() {
 	letters.forEach(function(letter) {
 		var msgContent = letter.letter.content;
-		console.log(msgContent);
 		var header = letter.fromUser === users.thisUser.id ? thisHeader : targetHeader;
-		console.log(header);
 		var userId = letter.fromUser === users.thisUser.id ? thisUserId : targetUserId;
-		console.log(userId);
-		updateChatRoom(msgContent, header, userId);
+		var userName = letter.fromUser === users.thisUser.id ? thisUserName : targetUserName;
+		updateChatRoom(msgContent, header, userId, userName);
 	});
 });
 
-function updateChatRoom(msgContent, header, userId) {
+function updateChatRoom(msgContent, header, userId, userName) {
 
 	var chatArea = document.getElementById('chatArea');
 
@@ -29,7 +27,7 @@ function updateChatRoom(msgContent, header, userId) {
             </a>
             <div class="toast show d-lg-block message-content ${userId === thisUserId ? "message-content-right" : "message-content-left"}" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
-                    <strong class="mr-auto">${userId}</strong>
+                    <strong class="mr-auto">${userName}</strong>
 <!--                    <small>${new Date().toLocaleString()}</small>-->
                     <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -51,12 +49,11 @@ $(function(){
 function send_letter() {
 	// $("#sendModal").modal("hide");
 
-	var toName = targetUserId;
 	var content = $("#message-text").val();
 
 	document.getElementById("message-text").value = '';
 
-	updateChatRoom(content, thisHeader, thisUserId);
+	updateChatRoom(content, thisHeader, thisUserId, targetUserName);
 
 	// whenever send, do 2 things: 1. send the message to target user in real time (websocket) 2. save to database (post)
 	if (content !== "") {
