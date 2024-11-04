@@ -2,8 +2,10 @@ package edu.rice.wecommunity.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import edu.rice.wecommunity.entity.Message;
+import edu.rice.wecommunity.entity.Notice;
 import edu.rice.wecommunity.entity.Page;
 import edu.rice.wecommunity.entity.User;
+import edu.rice.wecommunity.service.GroupService;
 import edu.rice.wecommunity.service.MessageService;
 import edu.rice.wecommunity.service.NoticeService;
 import edu.rice.wecommunity.service.UserService;
@@ -37,23 +39,23 @@ public class NoticeController implements CommunityConstant {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private GroupService groupService;
+
     @RequestMapping(path = "/list", method = RequestMethod.GET)
     public String getNoticeList(Model model) {
         User user = hostHolder.getUser();
 
         // 查询评论类通知
-        Message message = noticeService.findLatestNotice(user.getId(), TOPIC_COMMENT);
-        if (message != null) {
+        Notice notice = noticeService.findLatestNotice(user.getId(), TOPIC_COMMENT);
+        if (notice != null) {
             Map<String, Object> messageVO = new HashMap<>();
-            messageVO.put("message", message);
 
-            String content = HtmlUtils.htmlUnescape(message.getContent());
-            Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
-
-            messageVO.put("user", userService.findUserById((Integer) data.get("userId")));
-            messageVO.put("entityType", data.get("entityType"));
-            messageVO.put("entityId", data.get("entityId"));
-            messageVO.put("postId", data.get("postId"));
+            messageVO.put("user", userService.findUserById(notice.getFromId()));
+            messageVO.put("createTime", notice.getCreateTime());
+            messageVO.put("entityType", notice.getEntityType());
+            messageVO.put("entityId", notice.getEntityId());
+            messageVO.put("postId", notice.getEntityId());
 
             int count = noticeService.findNoticeCount(user.getId(), TOPIC_COMMENT);
             messageVO.put("count", count);
@@ -64,19 +66,15 @@ public class NoticeController implements CommunityConstant {
         }
 
         // 查询点赞类通知
-        message = noticeService.findLatestNotice(user.getId(), TOPIC_LIKE);
-        if (message != null) {
+        notice = noticeService.findLatestNotice(user.getId(), TOPIC_LIKE);
+        if (notice != null) {
             Map<String, Object> messageVO = new HashMap<>();
-            messageVO = new HashMap<>();
-            messageVO.put("message", message);
 
-            String content = HtmlUtils.htmlUnescape(message.getContent());
-            Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
-
-            messageVO.put("user", userService.findUserById((Integer) data.get("userId")));
-            messageVO.put("entityType", data.get("entityType"));
-            messageVO.put("entityId", data.get("entityId"));
-            messageVO.put("postId", data.get("postId"));
+            messageVO.put("user", userService.findUserById(notice.getFromId()));
+            messageVO.put("createTime", notice.getCreateTime());
+            messageVO.put("entityType", notice.getEntityType());
+            messageVO.put("entityId", notice.getEntityId());
+            messageVO.put("postId", notice.getEntityId());
 
             int count = noticeService.findNoticeCount(user.getId(), TOPIC_LIKE);
             messageVO.put("count", count);
@@ -87,18 +85,15 @@ public class NoticeController implements CommunityConstant {
         }
 
         // 查询关注类通知
-        message = noticeService.findLatestNotice(user.getId(), TOPIC_FOLLOW);
-        if (message != null) {
+        notice = noticeService.findLatestNotice(user.getId(), TOPIC_FOLLOW);
+        if (notice != null) {
             Map<String, Object> messageVO = new HashMap<>();
-            messageVO = new HashMap<>();
-            messageVO.put("message", message);
 
-            String content = HtmlUtils.htmlUnescape(message.getContent());
-            Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
-
-            messageVO.put("user", userService.findUserById((Integer) data.get("userId")));
-            messageVO.put("entityType", data.get("entityType"));
-            messageVO.put("entityId", data.get("entityId"));
+            messageVO.put("user", userService.findUserById(notice.getFromId()));
+            messageVO.put("createTime", notice.getCreateTime());
+            messageVO.put("entityType", notice.getEntityType());
+            messageVO.put("entityId", notice.getEntityId());
+            messageVO.put("postId", notice.getEntityId());
 
             int count = noticeService.findNoticeCount(user.getId(), TOPIC_FOLLOW);
             messageVO.put("count", count);
@@ -107,6 +102,25 @@ public class NoticeController implements CommunityConstant {
             messageVO.put("unread", unread);
 
             model.addAttribute("followNotice", messageVO);
+        }
+
+        // 查询群组请求类通知
+        notice = noticeService.findLatestNotice(user.getId(), TOPIC_REQUEST);
+        if (notice != null) {
+            Map<String, Object> messageVO = new HashMap<>();
+
+            messageVO.put("user", userService.findUserById(notice.getFromId()));
+            messageVO.put("createTime", notice.getCreateTime());
+            messageVO.put("entityType", notice.getEntityType());
+            messageVO.put("groupName", groupService.getGroup(notice.getEntityId()).getName());
+
+            int count = noticeService.findNoticeCount(user.getId(), TOPIC_REQUEST);
+            messageVO.put("count", count);
+
+            int unread = noticeService.findNoticeUnreadCount(user.getId(), TOPIC_REQUEST);
+            messageVO.put("unread", unread);
+
+            model.addAttribute("requestNotice", messageVO);
         }
 
         // 查询未读消息数量
@@ -118,7 +132,7 @@ public class NoticeController implements CommunityConstant {
         return "/site/notice";
     }
 
-    @RequestMapping(path = "/notice/detail/{topic}", method = RequestMethod.GET)
+    @RequestMapping(path = "/detail/{topic}", method = RequestMethod.GET)
     public String getNoticeDetail(@PathVariable("topic") String topic, Page page, Model model) {
         User user = hostHolder.getUser();
 
@@ -126,22 +140,22 @@ public class NoticeController implements CommunityConstant {
         page.setPath("/notice/detail/" + topic);
         page.setRows(noticeService.findNoticeCount(user.getId(), topic));
 
-        List<Message> noticeList = noticeService.findNotices(user.getId(), topic, page.getOffset(), page.getLimit());
+        List<Notice> noticeList = noticeService.findNotices(user.getId(), topic, page.getOffset(), page.getLimit());
         List<Map<String, Object>> noticeVoList = new ArrayList<>();
         if (noticeList != null) {
-            for (Message notice : noticeList) {
+            for (Notice notice : noticeList) {
                 Map<String, Object> map = new HashMap<>();
                 // 通知
                 map.put("notice", notice);
                 // 内容
-                String content = HtmlUtils.htmlUnescape(notice.getContent());
-                Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
-                map.put("user", userService.findUserById((Integer) data.get("userId")));
-                map.put("entityType", data.get("entityType"));
-                map.put("entityId", data.get("entityId"));
-                map.put("postId", data.get("postId"));
-                // 通知作者
+
+                map.put("user", hostHolder.getUser());
                 map.put("fromUser", userService.findUserById(notice.getFromId()));
+                map.put("entityType", notice.getEntityType());
+                map.put("entityId", notice.getEntityId());
+
+                if (topic.equals(TOPIC_REQUEST))
+                    map.put("groupName", groupService.getGroup(notice.getEntityId()).getName());
 
                 noticeVoList.add(map);
             }
@@ -149,9 +163,9 @@ public class NoticeController implements CommunityConstant {
         model.addAttribute("notices", noticeVoList);
 
         // 设置已读
-        List<Integer> ids = messageService.getLetterIds(user.getId(), noticeList);
+         List<Integer> ids = noticeService.findNotices(user.getId(), noticeList);
         if (!ids.isEmpty()) {
-            messageService.readMessage(ids);
+            noticeService.readNotice(ids);
         }
 
         return "/site/notice-detail";

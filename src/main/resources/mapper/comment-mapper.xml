@@ -41,4 +41,20 @@
         where id = #{id}
     </select>
 
+    <select id="findAll" resultType="Comment">
+        SELECT <include refid="selectFields"></include> FROM chatapp.comment;
+    </select>
+
+    <delete id="deleteAll">
+        DELETE FROM chatapp.comment;
+    </delete>
+
+    <insert id="batchInsertComments" parameterType="java.util.List">
+        INSERT INTO comment (id, user_id, entity_type, entity_id, target_id, content, status, create_time)
+        VALUES
+        <foreach collection="cList" item="comment" separator=",">
+            (#{comment.id}, #{comment.userId}, #{comment.entityType}, #{comment.entityId}, #{comment.targetId}, #{comment.content}, #{comment.status}, #{comment.createTime})
+        </foreach>
+    </insert>
+
 </mapper>

@@ -25,4 +25,9 @@ public interface DiscussPostMapper {
 
     int updateStatus(int id, int status);
 
+    List<DiscussPost> findAll();
+
+    void deleteAll();
+
+    void batchInsertPosts(@Param("pList") List<DiscussPost> pList);
 }

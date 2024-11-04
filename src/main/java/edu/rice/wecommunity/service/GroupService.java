@@ -40,6 +40,9 @@ public class GroupService {
     @Autowired
     private WebSocketSessionMap webSocketSessionMap;
 
+    @Autowired
+    private MessageService messageService;
+
     public Group getGroup(int group_id) {
         return groupMapper.selectById(group_id);
     }
@@ -49,36 +52,12 @@ public class GroupService {
     }
 
     public User getGroupOwner(int groupId) {
-        return userMapper.selectById(groupMapper.selectOwnerId(groupId));
+        return userMapper.selectById(groupMapper.selectById(groupId).getOwnerId());
     }
 
     public List<User> getGroupMembers(int groupId) {
         return groupMapper.selectUsersFromGroup(groupId);
     }
-
-//    public void addUserToGroup(String username, int group_id){
-//        // 1. Group count++
-//        // 2. add user_group record
-//        // 3. update user-group id pool
-//        AChatGroup group = getGroup(group_id);
-//        System.out.println(group.getCount());
-//        groupMapper.addUserToGroup(username, group_id);
-//        group.addCount();
-//        System.out.println(group.getCount());
-//    }
-
-//    public String[] getGroupMemberNames(int group_id) {
-//        List<User> users = groupMapper.selectUsersFromGroup(group_id);
-//        return users.stream().map(User::getUsername).toArray(String[]::new);
-//    }
-
-//    public void deleteUserFromGroup(String username, int group_id) {
-//        groupMapper.deleteUserFromGroup(username, group_id);
-//        AChatGroup group = getGroup(group_id);
-//        group.subCount();
-//        if (group.getCount() <= 0)
-//            groupMapper.deleteGroup(group_id);
-//    }
 
     public void sendGroupMessage(int userId, String content, int groupId) {
         User user = userService.findUserById(userId);
@@ -112,7 +91,7 @@ public class GroupService {
         return (Set<Integer>) redisTemplate.opsForZSet().reverseRange(groupKey, 0, -1);
     }
 
-    public int addUserToGroup(int userId, int groupId) {
+    public int addUserToGroup(int userId, int groupId, int type) {
         int count = groupMapper.selectGroupCount(groupId);
         int capacity = groupMapper.selectGroupCapacity(groupId);
         Integer found = groupMapper.selectUserId(userId, groupId);
@@ -124,7 +103,7 @@ public class GroupService {
             found = groupMapper.selectUserId(userId, groupId);
             if (count >= capacity || found == null) return 0;
 
-            groupMapper.addUserToGroupByUserId(userId, groupId);
+            groupMapper.addUserToGroupByUserId(userId, groupId, type);
         }
         return 1;
     }
@@ -186,12 +165,13 @@ public class GroupService {
         group.setOwnerId(userId);
         groupMapper.insertGroup(group);
 
-        addUserToGroup(userId, group.getId());
+        addUserToGroup(userId, group.getId(), 2);
         return group.getId();
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
     public void deleteGroup(int groupId) {
+        messageService.clearGroupMessages(groupId);
         groupMapper.clearUsers(groupId);
         groupMapper.deleteGroup(groupId);
     }

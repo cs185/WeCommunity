@@ -50,7 +50,7 @@
 
     <insert id="insertGroup" parameterType="Group" useGeneratedKeys="true" keyProperty="id">
         insert into chat_group (<include refid="insertFields"></include>)
-        values (#{name}, #{owner_id}, #{capacity})
+        values (#{name}, #{ownerId}, #{capacity})
     </insert>
 
     <update id="updateUserTypeByUserId">
@@ -58,13 +58,13 @@
     </update>
 
     <insert id="addUserToGroupByUserId">
-        insert into user_group user_id, group_id, type
-        values(#{userId}, #{group_id}, #{type})
+        insert into user_group (user_id, group_id, type)
+        values(#{userId}, #{groupId}, #{type})
     </insert>
 
     <insert id="selectOwnerId">
         SELECT chat_group.owner_id FROM chat_group
-        WHERE group_id = #{groupId}
+        WHERE id = #{groupId}
     </insert>
 
     <insert id="selectUserId">
@@ -78,14 +78,9 @@
         WHERE group_id = #{groupId}
     </insert>
 
-    <insert id="addUserToGroup">
-        insert into user_group (user_id, group_id, type)
-        select id, #{group_id}, 0 from user where username = #{username}
-    </insert>
-
     <delete id="deleteUserFromGroupByUserId">
         delete from user_group
-        where user_id = #{user_id} and group_id = #{group_id}
+        where user_id = #{userId} and group_id = #{groupId}
     </delete>
 
     <delete id="deleteUserFromGroup">
@@ -94,19 +89,19 @@
         where user_id = user.id and group_id = #{group_id} and user.username = #{username};
     </delete>
 
-    <select id="deleteGroup">
+    <delete id="deleteGroup">
         DELETE FROM chat_group
-        WHERE chat_group.id = #{group_id};
-    </select>
+        WHERE chat_group.id = #{groupId};
+    </delete>
 
-    <select id="selectGroupCount">
+    <select id="selectGroupCount" resultType="Integer">
         SELECT count(user_group.user_id) FROM user_group
-        WHERE user_group.group_id = #{group_id};
+        WHERE user_group.group_id = #{groupId};
     </select>
 
-    <select id="selectGroupCapacity">
+    <select id="selectGroupCapacity" resultType="Integer">
         SELECT chat_group.capacity FROM chat_group
-        WHERE chat_group.group_id = #{group_id};
+        WHERE chat_group.id = #{groupId};
     </select>
 
 </mapper>

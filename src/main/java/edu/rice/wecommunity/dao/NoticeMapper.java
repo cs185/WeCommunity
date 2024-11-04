@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface NoticeMapper {
     // 查询某个主题下最新的通知
-    Message selectLatestNotice(int userId, String topic);
+    Notice selectLatestNotice(int userId, String topic);
 
     int batchInsertNoticess(@Param("noticeList") List<Notice> noticeList);
 
@@ -21,7 +21,9 @@ public interface NoticeMapper {
     int selectNoticeUnreadCount(int userId, String topic);
 
     // 查询某个主题所包含的通知列表
-    List<Message> selectNotices(int userId, String topic, int offset, int limit);
+    List<Notice> selectNotices(int userId, String topic, int offset, int limit);
 
     void insertNotice(Notice notice);
+
+    int updateStatus(List<Integer> ids, int status);
 }

@@ -6,7 +6,7 @@ public class Group {
     private int id;
     private String name;
     private int ownerId;
-    private int capacity;
+    private int capacity = 20;
     private Date createTime;
 
     public int getId() {
@@ -52,7 +52,7 @@ public class Group {
 
     @Override
     public String toString() {
-        return "AChatGroup{" +
+        return "Group{" +
                 "id=" + id +
                 ", name=" + name +
                 ", ownerId=" + ownerId +

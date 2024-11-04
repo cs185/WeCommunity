@@ -25,7 +25,7 @@ function updateChatRoom(msgContent, header, userId) {
 
 	li.innerHTML = `
             <a href="profile.html">
-                <img src="${header}" class="mr-4 rounded-circle user-header" alt="用户头像">
+                <img src="${header}" class="mr-4 rounded-circle user-header" alt="user header">
             </a>
             <div class="toast show d-lg-block message-content ${userId === thisUserId ? "message-content-right" : "message-content-left"}" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">

@@ -25,13 +25,13 @@
 							<a class="nav-link active" href="profile.html">Personal Information</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="my-post.html">My Posts</a>
+							<a class="nav-link" th:if="${user.id==thisUser.id}" href="my-post.html">My Posts</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="my-reply.html">My Comments</a>
+							<a class="nav-link" th:if="${user.id==thisUser.id}" href="my-reply.html">My Comments</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" th:href="@{/group/list}">My Groups</a>
+							<a class="nav-link" th:if="${user.id==thisUser.id}" th:href="@{/group/list}">My Groups</a>
 						</li>
 					</ul>
 				</div>

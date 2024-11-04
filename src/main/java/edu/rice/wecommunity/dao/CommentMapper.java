@@ -2,6 +2,7 @@ package edu.rice.wecommunity.dao;
 
 import edu.rice.wecommunity.entity.Comment;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,4 +17,9 @@ public interface CommentMapper {
 
     Comment selectCommentById(int id);
 
+    List<Comment> findAll();
+
+    void deleteAll();
+
+    void batchInsertComments(@Param("cList") List<Comment> cList);
 }

@@ -124,6 +124,7 @@ public class UserController implements CommunityConstant {
         if (user == null) {
             throw new RuntimeException("User not exist!");
         }
+        model.addAttribute("thisUser", hostHolder.getUser());
 
         // 用户
         model.addAttribute("user", user);

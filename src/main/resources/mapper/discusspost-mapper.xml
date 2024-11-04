@@ -55,4 +55,20 @@
         update discuss_post set status = #{status} where id = #{id}
     </update>
 
+    <select id="findAll" resultType="DiscussPost">
+        SELECT <include refid="selectFields"></include> FROM chatapp.discuss_post;
+    </select>
+    
+    <delete id="deleteAll">
+        DELETE FROM chatapp.discuss_post;
+    </delete>
+
+    <insert id="batchInsertPosts" parameterType="java.util.List">
+        INSERT INTO discuss_post (id, user_id, title, content, type, status, create_time, comment_count, score)
+        VALUES
+        <foreach collection="pList" item="post" separator=",">
+            (#{post.id}, #{post.userId}, #{post.title}, #{post.content}, #{post.type}, #{post.status}, #{post.createTime}, #{post.commentCount}, #{post.score})
+        </foreach>
+    </insert>
+
 </mapper>

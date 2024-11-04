@@ -2,6 +2,7 @@ package edu.rice.wecommunity.dao;
 
 import edu.rice.wecommunity.entity.Message;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -38,4 +39,12 @@ public interface MessageMapper {
     int selectGroupLetterUnreadCount(int userId, int groupId);
 
     List<Message> selectGroupLetters(int groupId, int offset, int limit);
+
+    void clearGroupMessages(int groupId);
+
+    List<Message> findAll();
+
+    void deleteAll();
+
+    void batchInsertMessages(@Param("mList") List<Message> mList);
 }

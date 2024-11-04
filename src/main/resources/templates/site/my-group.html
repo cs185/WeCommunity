@@ -23,7 +23,7 @@
 					<div class="position-relative">
 						<ul class="nav nav-tabs">
 							<li class="nav-item">
-								<a class="nav-link active" href="profile.html">Personal Information</a>
+								<a class="nav-link" href="profile.html">Personal Information</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="my-post.html">My Posts</a>
@@ -32,7 +32,7 @@
 								<a class="nav-link" href="my-reply.html">My Comments</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" th:href="@{/group/list}">My Groups</a>
+								<a class="nav-link active" th:href="@{/group/list}">My Groups</a>
 							</li>
 						</ul>
 					</div>
@@ -40,12 +40,16 @@
 				</div>
 
 				<!-- Group List -->
-				<label for="group-name"></label><input id="group-name">
+				<label for="create-name"></label><input id="create-name" placeholder="Enter group name">
 				<button type="button" id="btn-create">Create Group</button>
+
+				<label for="join-id"></label><input id="join-id" placeholder="Enter group id">
+				<button type="button" id="btn-join">Join Group</button>
+
 				<ul class="list-unstyled">
 					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:each="group:${groups}">
 						<a th:href="@{|/group/${group.id}|}">
-							<img th:src="@{/user/header/group.jpg}" class="mr-4 rounded-circle user-header" alt="User Avatar" >
+							<img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/group-6253364-5144237.png?f=webp&w=512" class="mr-4 rounded-circle user-header" alt="User Avatar" >
 						</a>
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
@@ -59,7 +63,7 @@
 							<div>
 								<input type="hidden" id="entityId" th:value="${group.id}">
 								<button type="button" th:class="|btn ${group.ownerId==userId?'btn-secondary':'btn-info'} btn-sm float-right leave-btn|"
-										th:text="${group.ownerId==userId?'Leave':'Delete'}">Leave</button>
+										th:text="${group.ownerId==userId?'Delete':'Leave'}">Option</button>
 							</div>
 						</div>
 					</li>

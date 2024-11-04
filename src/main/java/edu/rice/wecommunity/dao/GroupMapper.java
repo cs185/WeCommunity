@@ -21,21 +21,19 @@ public interface GroupMapper {
 
     List<Group> selectGroupsById(int userId);
 
-    Group insertGroup(Group group);
+    int insertGroup(Group group);
 
     int updateUserTypeByUserId(int user_id, int group_id, int type);
 
     int updateUserType(String username, int group_id, int type);
 
-    int addUserToGroupByUserId(int user_id, int group_id);
+    int addUserToGroupByUserId(int userId, int groupId, int type);
 
-    int addUserToGroup(String username, int group_id);
-
-    int deleteUserFromGroupByUserId(int user_id, int group_id);
+    int deleteUserFromGroupByUserId(int userId, int groupId);
 
     void clearUsers(int groupId);
 
-    void deleteGroup(int group_id);
+    void deleteGroup(int groupId);
 
     int selectOwnerId(int groupId);
 
@@ -44,6 +42,7 @@ public interface GroupMapper {
     int selectGroupCapacity(int groupId);
 
     Integer selectUserId(int userId, int groupId);
+
 
 //Yuan Dong (Nanjing, 09/11/2001, born in Yancheng, Rice University) will be a rich project manager in 5 months
 }

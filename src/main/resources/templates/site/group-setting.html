@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" th:href="@{/css/group.css}" />
+	<title>Group Settings</title>
+</head>
+<body>
+<div class="nk-container">
+	<!-- Header -->
+	<header class="bg-dark sticky-top" th:replace="index::header"></header>
+
+	<!-- Main Content -->
+	<div class="main">
+		<div class="container">
+			<div class="row">
+				<div class="col-8">
+					<h6><b class="square"></b> Group Settings - <i class="text-success" th:utext="${group.name}">Group Name</i></h6>
+				</div>
+				<div class="col-4 text-right">
+					<button type="button" class="btn btn-secondary btn-sm" onclick="backToGroupPage();">Back to Group</button>
+				</div>
+			</div>
+
+			<!-- Member List with Delete Option -->
+			<ul class="list-group mt-4" id="memberList">
+				<li class="list-group-item d-flex justify-content-between align-items-center" th:each="member : ${members}">
+					<div>
+						<img th:src="${member.headerUrl}" class="rounded-circle user-header mr-2" alt="User Avatar">
+						<span th:text="${member.username}">Member Name</span>
+					</div>
+					<button class="btn btn-danger btn-sm" th:if="${member.id!=group.ownerId}" th:onclick="kickMember([[${member.id}]])">Delete</button>
+				</li>
+			</ul>
+
+			<!-- Invite User Section -->
+			<div class="mt-4">
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" placeholder="Enter User ID to Invite" id="inviteUserId">
+					<div class="input-group-append">
+						<button class="btn btn-primary" type="button" onclick="inviteUser()">Invite</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="bg-dark" th:replace="~{index::footer}"></footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script th:src="@{/js/global.js}"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var groupId = /*[[${group.id}]]*/ 'defaultGroupId';
+	/*]]>*/
+</script>
+<script>
+	function backToGroupPage() {
+		window.location.href = CONTEXT_PATH + "/group/" + groupId;
+	}
+
+	function kickMember(userId) {
+		$.post(CONTEXT_PATH + "/group/kick", { userId: userId, groupId: groupId }, function(response) {
+			response = JSON.parse(response);
+			if (response.code === 0) {
+				alert(response.msg);
+				location.reload();
+			} else {
+				alert("Failed to kick user: " + response.msg);
+			}
+		});
+	}
+
+	function inviteUser() {
+		const userId = $("#inviteUserId").val();
+		if (!userId) {
+			alert("Please enter a User ID.");
+			return;
+		}
+
+		$.post(CONTEXT_PATH + "/group/invite", { userId: userId, groupId: groupId }, function(response) {
+			response = JSON.parse(response);
+			if (response.code === 0) {
+				alert(response.msg);
+				$("#inviteUserId").val('');
+			} else {
+				alert("Failed to invite user: " + response.msg);
+			}
+		});
+	}
+</script>
+</body>
+</html>

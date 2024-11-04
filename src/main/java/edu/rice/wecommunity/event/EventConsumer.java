@@ -45,16 +45,16 @@ public class EventConsumer implements CommunityConstant {
 //    @Autowired
 //    private GroupService groupService;
 
-    @KafkaListener(topics = {TOPIC_COMMENT, TOPIC_LIKE, TOPIC_FOLLOW})
+    @KafkaListener(topics = {TOPIC_COMMENT, TOPIC_LIKE, TOPIC_FOLLOW, TOPIC_REQUEST})
     public void handleCommentMessage(ConsumerRecord record) {
         if (record == null || record.value() == null) {
-            logger.error("消息的内容为空!");
+            logger.error("Empty Notice!");
             return;
         }
 
         Event event = JSONObject.parseObject(record.value().toString(), Event.class);
         if (event == null) {
-            logger.error("消息格式错误!");
+            logger.error("Unsupported Format!");
             return;
         }
 

@@ -1,10 +1,13 @@
 package edu.rice.wecommunity.controller.interceptor;
 
+import edu.rice.wecommunity.aspect.ServiceLogAspect;
 import edu.rice.wecommunity.entity.LoginTicket;
 import edu.rice.wecommunity.entity.User;
 import edu.rice.wecommunity.service.UserService;
 import edu.rice.wecommunity.util.CookieUtil;
 import edu.rice.wecommunity.util.HostHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,9 +30,12 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
     @Autowired
     private HostHolder hostHolder;
 
+    private static final Logger logger = LoggerFactory.getLogger(ServiceLogAspect.class);
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 从cookie中获取凭证
+//        logger.info("before: " + SecurityContextHolder.getContext());
         String ticket = CookieUtil.getValue(request, "ticket");
 
         if (ticket != null) {
@@ -47,7 +53,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
                 SecurityContextHolder.setContext(new SecurityContextImpl(authentication));
             }
         }
-
+//        logger.info("after: " + SecurityContextHolder.getContext());
         return true;
     }
 
@@ -62,6 +68,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         hostHolder.clear();
-        SecurityContextHolder.clearContext();
+//        SecurityContextHolder.clearContext();
+//        logger.info("after request: " + SecurityContextHolder.getContext());
     }
 }

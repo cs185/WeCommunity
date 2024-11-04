@@ -128,6 +128,10 @@ public class MessageService {
         }
     }
 
+    public void clearGroupMessages(int groupId) {
+        messageMapper.clearGroupMessages(groupId);
+    }
+
 //    public void sendPersonalMessage(String content, int targetId, int senderId) {
 //        WebSocketSession chatSession = webSocketSessionMap.getUserSession(targetId);
 //        if (chatSession == null || !chatSession.isOpen()) {

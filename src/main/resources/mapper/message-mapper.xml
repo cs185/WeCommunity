@@ -119,4 +119,26 @@
         </foreach>
     </update>
 
+    <delete id="clearGroupMessages">
+        DELETE FROM message
+        WHERE conversation_id = '_'
+        AND to_id = #{groupId};
+    </delete>
+
+    <select id="findAll" resultType="Message">
+        SELECT <include refid="selectFields"></include> FROM chatapp.message;
+    </select>
+
+    <delete id="deleteAll">
+        DELETE FROM chatapp.message;
+    </delete>
+
+    <insert id="batchInsertMessages" parameterType="java.util.List">
+        INSERT INTO message (id, from_id, to_id, conversation_id, content, status, create_time)
+        VALUES
+        <foreach collection="mList" item="message" separator=",">
+            (#{message.id}, #{message.fromId}, #{message.toId}, #{message.conversationId}, #{message.content}, #{message.status}, #{message.createTime})
+        </foreach>
+    </insert>
+
 </mapper>

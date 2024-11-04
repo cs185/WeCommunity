@@ -20,11 +20,14 @@ public class ServiceLogAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceLogAspect.class);
 
+    // define pointcut at all methods in service layer
     @Pointcut("execution(* edu.rice.wecommunity.service.*.*(..))")
     public void pointcut() {
 
     }
 
+    // log before the pointcut (method call)
+    // joinPoint is the service method
     @Before("pointcut()")
     public void before(JoinPoint joinPoint) {
         // 用户[1.2.3.4],在[xxx],访问了[com.nowcoder.community.service.xxx()].

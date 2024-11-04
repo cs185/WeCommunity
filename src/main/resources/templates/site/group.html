@@ -22,6 +22,11 @@
 				<div class="col-8">
 					<h6><b class="square"></b> <i class="text-success" th:text="${group.name}">Group Name</i></h6>
 				</div>
+
+				<div class="col-8">
+				<button type="button" class="btn btn-secondary btn-sm" th:if="${user.id==group.ownerId}" onclick="toSetting();">Setting</button>
+				</div>
+
 				<div class="col-4 text-right">
 					<button type="button" class="btn btn-secondary btn-sm" onclick="back();">Back</button>
 				</div>
@@ -35,7 +40,7 @@
 					<ul class="list-unstyled" id="memberList">
 						<!-- 群组成员 -->
 						<li th:each="member : ${members}" class="media mb-3">
-							<img th:src="${member.headerUrl}" class="mr-3 rounded-circle user-header" alt="用户头像">
+							<img th:src="${member.headerUrl}" class="mr-3 rounded-circle user-header" alt="user header">
 							<div class="media-body">
 								<h6 class="mt-0" th:text="${member.username}">Username</h6>
 							</div>
