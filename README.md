@@ -47,7 +47,7 @@ Working on the deployment ...
 
 9. Group Management
 
-   &emsp;&emsp;Members of a group can chat. When a member sends a message, all other members can see the message. Each user can create a group chat. The group owner can invite other users to join the group. Users can also apply to the group owner to join the group chat.
+   &emsp;&emsp;Members of a group can chat. When a member sends a message, all other members can see the message. Each user can create a group chat. The group owner can invite other users to join the group. Users can also request the group owner to join the group chat.
 
 10. Search Engine
 
