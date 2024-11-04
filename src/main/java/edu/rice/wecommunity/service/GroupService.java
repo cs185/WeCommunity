@@ -48,7 +48,7 @@ public class GroupService {
     }
 
     public List<Group> getUserGroups(int userId) {
-        return getUserGroupIds(userId);
+        return getUserGroupsById(userId);
     }
 
     public User getGroupOwner(int groupId) {
@@ -81,12 +81,12 @@ public class GroupService {
         });
     }
 
-    public List<Group> getUserGroupIds(int userId) {
+    public List<Group> getUserGroupsById(int userId) {
         return groupMapper.selectGroupsById(userId);
     }
 
     @Deprecated
-    public Set<Integer> getUserGroupIdsCahce(int userId) {
+    public Set<Integer> getUserGroupsByIdCahce(int userId) {
         String groupKey = RedisKeyUtil.getUserGroupKey(userId);
         return (Set<Integer>) redisTemplate.opsForZSet().reverseRange(groupKey, 0, -1);
     }

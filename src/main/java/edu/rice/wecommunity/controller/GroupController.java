@@ -112,14 +112,6 @@ public class GroupController implements CommunityConstant {
         return CommunityUtil.getJSONString(0, "waiting for group admin to approve ...", null);
     }
 
-    @GetMapping("/invite")
-    public String getInvite(@RequestParam int userId, @RequestParam int groupId, Model model) {
-        model.addAttribute("userId", userId);
-        model.addAttribute("groupId", groupId);
-
-        return "site/invite";
-    }
-
     @PostMapping("/leave")
     @ResponseBody
     public String leaveGroup(@RequestParam int groupId) {
@@ -150,20 +142,6 @@ public class GroupController implements CommunityConstant {
         model.addAttribute("user", hostHolder.getUser());
 
         return "site/group-setting";
-    }
-
-    @PostMapping("/request")
-    @ResponseBody
-    public String requestJoin(@RequestParam int groupId) {
-        Event event = new Event()
-                .setTopic(TOPIC_REQUEST)
-                .setUserId(hostHolder.getUser().getId())
-                .setEntityType(ENTITY_TYPE_GROUP)
-                .setEntityId(groupId)
-                .setEntityUserId(groupService.getGroup(groupId).getOwnerId());
-
-        eventProducer.fireEvent(event);
-        return CommunityUtil.getJSONString(0, "request sent", null);
     }
 
     @PostMapping("/invite")

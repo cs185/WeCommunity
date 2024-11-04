@@ -54,7 +54,7 @@
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
 								<a th:href="@{|/group/${group.id}|}">
-									<span class="text-success" th:utext="${group.name}">Chat Group</span>
+									<span style="color: purple;" th:utext="${group.name}">Chat Group</span>
 								</a>
 								<span class="float-right text-muted font-size-12">
 									Joined on <i th:text="${#dates.format(group.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</i>
