@@ -73,6 +73,21 @@ Working on the deployment ...
 - Docker
 - AWS
 
+### Interface Design
+
+![Home Page](docs/images/home.png "Home Page")
+
+![Publish Post](docs/images/publish.png "Publish-Post")
+
+![Post-Detail](docs/images/post.png "Post-Detail")
+
+![Private Chat](docs/images/private-chat.png "Private Chat")
+
+![Group Chat](docs/images/group-chat.png "Group Chat")
+
+![Message_Notification](docs/images/message-notice.png "System_Notification")
+
+![System_Notification](docs/images/system-notice.png "System_Notification")
 
 
 ### Request-driven Data Flow Analysis of Each Module
@@ -112,28 +127,6 @@ Working on the deployment ...
 #### Http Request Flow
 
 ![Request](docs/images/Request.png)
-
-
-
-
-
-### Interface Design
-
-![Home Page](docs/images/home.png "Home Page")
-
-![Publish Post](docs/images/publish.png "Publish-Post")
-
-![Post-Detail](docs/images/post.png "Post-Detail")
-
-![Private Chat](docs/images/private-chat.png "Private Chat")
-
-![Group Chat](docs/images/group-chat.png "Group Chat")
-
-![Message_Notification](docs/images/message-notice.png "System_Notification")
-
-![System_Notification](docs/images/system-notice.png "System_Notification")
-
-
 
 
 
