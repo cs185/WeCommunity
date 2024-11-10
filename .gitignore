@@ -59,3 +59,7 @@ build/
 hs_err_pid*
 replay_pid*
 
+# sql files
+*.sql
+
+D:/

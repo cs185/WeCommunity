@@ -66,7 +66,7 @@ public class RedisTests {
     public void testSets() {
         String redisKey = "test:teachers";
 
-        redisTemplate.opsForSet().add(redisKey, "刘备", "关羽", "张飞", "赵云", "诸葛亮");
+        redisTemplate.opsForSet().add(redisKey, "Adam", "Bob", "Carl", "Daisy", "Erik");
 
         System.out.println(redisTemplate.opsForSet().size(redisKey));
         System.out.println(redisTemplate.opsForSet().pop(redisKey));
@@ -77,15 +77,15 @@ public class RedisTests {
     public void testSortedSets() {
         String redisKey = "test:students";
 
-        redisTemplate.opsForZSet().add(redisKey, "唐僧", 80);
-        redisTemplate.opsForZSet().add(redisKey, "悟空", 90);
-        redisTemplate.opsForZSet().add(redisKey, "八戒", 50);
-        redisTemplate.opsForZSet().add(redisKey, "沙僧", 70);
-        redisTemplate.opsForZSet().add(redisKey, "白龙马", 60);
+        redisTemplate.opsForZSet().add(redisKey, "Fire", 80);
+        redisTemplate.opsForZSet().add(redisKey, "GB", 90);
+        redisTemplate.opsForZSet().add(redisKey, "Hedge Fund", 50);
+        redisTemplate.opsForZSet().add(redisKey, "Instant Messaging", 70);
+        redisTemplate.opsForZSet().add(redisKey, "Jack Ma", 60);
 
         System.out.println(redisTemplate.opsForZSet().zCard(redisKey));
-        System.out.println(redisTemplate.opsForZSet().score(redisKey, "八戒"));
-        System.out.println(redisTemplate.opsForZSet().reverseRank(redisKey, "八戒"));
+        System.out.println(redisTemplate.opsForZSet().score(redisKey, "GB"));
+        System.out.println(redisTemplate.opsForZSet().reverseRank(redisKey, "GB"));
         System.out.println(redisTemplate.opsForZSet().reverseRange(redisKey, 0, 2));
     }
 
@@ -121,9 +121,9 @@ public class RedisTests {
 
                 operations.multi();
 
-                operations.opsForSet().add(redisKey, "zhangsan");
-                operations.opsForSet().add(redisKey, "lisi");
-                operations.opsForSet().add(redisKey, "wangwu");
+                operations.opsForSet().add(redisKey, "Adam");
+                operations.opsForSet().add(redisKey, "Bob");
+                operations.opsForSet().add(redisKey, "Carl");
 
                 System.out.println(operations.opsForSet().members(redisKey));
 
