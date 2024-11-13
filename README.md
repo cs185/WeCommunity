@@ -3,11 +3,9 @@
 
 WeCommunity is a user sharing and chatting platform, similar to social media, providing post management, comments, followers, likes, search, instant messaging, group chat, statistics and other features.
 
-Explore Here!
+[Explore Here!](http://weco.us-east-2.elasticbeanstalk.com/wecommunity/index)
 
-[WeCommunity Home Page](http://weco.us-east-2.elasticbeanstalk.com/wecommunity/index)
-
-Accounts for you to use in case you don't want to register one:
+### Accounts for you to use in case you don't want to register one:
 
 Account 1:
 
