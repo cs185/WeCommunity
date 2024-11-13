@@ -7,23 +7,11 @@ WeCommunity is a user sharing and chatting platform, similar to social media, pr
 
 ### Accounts for you to use in case you don't want to register one:
 
-Account 1:
+username&password: aaa
 
-username: aaa
+username&password: bbb
 
-password: aaa
-
-Account 2:
-
-username: bbb
-
-password: bbb
-
-Account 3:
-
-username: ccc
-
-password: ccc
+username&password: ccc
 
 ### System Architecture Diagram
 
