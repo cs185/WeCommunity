@@ -10,15 +10,21 @@ WeCommunity Home Page[http://weco.us-east-2.elasticbeanstalk.com/wecommunity/ind
 Accounts for you to use in case you don't want to register one:
 
 Account 1:
+
 username: aaa
+
 password: aaa
 
 Account 2:
+
 username: bbb
+
 password: bbb
 
 Account 3:
+
 username: ccc
+
 password: ccc
 
 ### System Architecture Diagram
