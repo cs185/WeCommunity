@@ -83,7 +83,7 @@ password: ccc
 - Spring
 - MyBatis3: Database interaction
 - Spring Security
-- Redis：Cache and Data Storage
+- Redis cloud：Cache and Data Storage
 - Kafka：Message Queue
 - Elasticsearch：Distributed Search Engine
 - Quartz：Timed Scheduling Framework
@@ -91,8 +91,7 @@ password: ccc
 - Thymeleaf：Template Engine
 - Caffeine：Java Local Cache
 - MySQL
-- Docker
-- AWS
+- AWS (Elastic Beanstalk, RDS, MSK)
 
 ### Interface Design
 
@@ -148,15 +147,3 @@ password: ccc
 #### Http Request Flow
 
 ![Request](docs/images/Request.png)
-
-
-
-### File Description
-
-- table.sql：SQL file for creating tables
-- WeCommunity：Maven, project source code
-- static：Static front-end resources
-
-
-
-### Local Deployment
