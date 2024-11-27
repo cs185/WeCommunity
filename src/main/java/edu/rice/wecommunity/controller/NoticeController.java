@@ -129,7 +129,7 @@ public class NoticeController implements CommunityConstant {
         int noticeUnreadCount = noticeService.findNoticeUnreadCount(user.getId(), null);
         model.addAttribute("noticeUnreadCount", noticeUnreadCount);
 
-        return "/site/notice";
+        return "site/notice";
     }
 
     @RequestMapping(path = "/detail/{topic}", method = RequestMethod.GET)
@@ -168,6 +168,6 @@ public class NoticeController implements CommunityConstant {
             noticeService.readNotice(ids);
         }
 
-        return "/site/notice-detail";
+        return "site/notice-detail";
     }
 }

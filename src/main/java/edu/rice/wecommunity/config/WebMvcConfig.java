@@ -1,7 +1,7 @@
 package edu.rice.wecommunity.config;
 
 //import edu.rice.wecommunity.controller.interceptor.AlphaInterceptor;
-import edu.rice.wecommunity.controller.interceptor.DataInterceptor;
+//import edu.rice.wecommunity.controller.interceptor.DataInterceptor;
 import edu.rice.wecommunity.controller.interceptor.LoginTicketInterceptor;
 import edu.rice.wecommunity.controller.interceptor.MessageInterceptor;
 import edu.rice.wecommunity.controller.interceptor.WebSocketHandshakeInterceptor;
@@ -25,8 +25,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private MessageInterceptor messageInterceptor;
 
-    @Autowired
-    private DataInterceptor dataInterceptor;
+//    @Autowired
+//    private DataInterceptor dataInterceptor;
 
     @Autowired
     private WebSocketHandshakeInterceptor webSocketHandshakeInterceptor;
@@ -46,8 +46,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(messageInterceptor)
                 .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
 
-        registry.addInterceptor(dataInterceptor)
-                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
+//        registry.addInterceptor(dataInterceptor)
+//                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
 
     }
 

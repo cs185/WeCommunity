@@ -7,6 +7,8 @@ import edu.rice.wecommunity.service.DiscussPostService;
 import edu.rice.wecommunity.service.LikeService;
 import edu.rice.wecommunity.service.UserService;
 import edu.rice.wecommunity.util.CommunityConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mysql.cj.conf.PropertyKey.logger;
+
 @Controller
 public class HomeController implements CommunityConstant {
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     private DiscussPostService discussPostService;
@@ -43,26 +48,30 @@ public class HomeController implements CommunityConstant {
             for (DiscussPost post : list) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", post);
-                User user = userService.findUserById(post.getUserId());
-                map.put("user", user);
-
-                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
-                map.put("likeCount", likeCount);
+                try {
+                    User user = userService.findUserById(post.getUserId());
+                    map.put("user", user);
+                    long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                    map.put("likeCount", likeCount);
+                }
+                catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
 
                 discussPosts.add(map);
             }
         }
         model.addAttribute("discussPosts", discussPosts);
-        return "/index";
+        return "index";
     }
 
     @RequestMapping(path = "/error", method = RequestMethod.GET)
     public String getErrorPage() {
-        return "/error/500";
+        return "error/500";
     }
 
     @RequestMapping(path = "/denied", method = RequestMethod.GET)
     public String getDeniedPage() {
-        return "/error/404";
+        return "error/404";
     }
 }

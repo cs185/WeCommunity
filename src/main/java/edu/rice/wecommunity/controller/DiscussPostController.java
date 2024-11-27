@@ -65,7 +65,7 @@ public class DiscussPostController implements CommunityConstant {
         eventProducer.fireEvent(event);
 
         // 报错的情况,将来统一处理.
-        return CommunityUtil.getJSONString(0, "Comment successfully!");
+        return CommunityUtil.getJSONString(0, "Post successfully!");
     }
 
     @RequestMapping(path = "/detail/{discussPostId}", method = RequestMethod.GET)
@@ -150,7 +150,7 @@ public class DiscussPostController implements CommunityConstant {
 
         model.addAttribute("comments", commentVoList);
 
-        return "/site/discuss-detail";
+        return "site/discuss-detail";
     }
 
     // 置顶

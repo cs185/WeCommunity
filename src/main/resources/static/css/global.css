@@ -21,7 +21,7 @@ body {
 }
 
 header .navbar-brand {
-	background: url('../img/logo.png') no-repeat;
+	background: url('https://wecommunity-static-files.s3.us-east-2.amazonaws.com/logo.png') no-repeat;
 	background-size: 200px 42px;
 	width: 200px;
 	height: 42px;

@@ -43,7 +43,7 @@
 						<img th:src="${map.target.headerUrl}" th:if="${map.target!=null}" class="mr-4 rounded-circle user-header" alt="User Avatar">
 					</a>
 					<a th:href="@{|/group/${map.groupId}|}" th:if="${map.target==null}">
-						<img th:src="@{/user/header/group.jpg}" th:if="${map.target==null}" class="mr-4 rounded-circle user-header" alt="User Avatar">
+						<img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/group-6253364-5144237.png?f=webp&w=512" th:if="${map.target==null}" class="mr-4 rounded-circle user-header" alt="Group Avatar">
 					</a>
 					<div class="media-body">
 						<h6 class="mt-0 mb-3">
@@ -52,7 +52,8 @@
 							<span class="float-right text-muted font-size-12" th:text="${#dates.format(map.conversation.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</span>
 						</h6>
 						<div>
-							<a th:href="@{|/letter/detail/${map.conversation.conversationId}|}" th:utext="${map.conversation.content}">Rice Cooker, come on!</a>
+							<a th:if="${map.target!=null}" th:href="@{|/letter/detail/${map.conversation.conversationId}|}" th:utext="${map.conversation.content}">Rice Cooker, come on!</a>
+							<a th:if="${map.target==null}" th:href="@{|/group/${map.groupId}|}" th:utext="${map.conversation.content}">Rice Cooker, come on!</a>
 							<ul class="d-inline font-size-12 float-right">
 								<li class="d-inline ml-2"><a href="#" class="text-primary"><i th:text="${map.letterCount}">5</i> records</a></li>
 							</ul>

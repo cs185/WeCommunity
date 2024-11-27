@@ -4,7 +4,9 @@
 //import com.google.cloud.translate.TranslateOptions;
 //import com.google.cloud.translate.Translation;
 //import edu.rice.wecommunity.dao.*;
+//import edu.rice.wecommunity.dao.elasticsearch.DiscussPostDAO;
 //import edu.rice.wecommunity.entity.*;
+//import edu.rice.wecommunity.service.ElasticsearchService;
 //import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.api.extension.ExtendWith;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@
 //
 //import java.util.HashMap;
 //import java.util.List;
+//
+//import static edu.rice.wecommunity.util.CommunityConstant.ENTITY_TYPE_POST;
 //
 //@ExtendWith(SpringExtension.class)
 //@SpringBootTest
@@ -35,6 +39,17 @@
 //
 //    @Autowired
 //    private CommentMapper commentMapper;
+//
+//    @Autowired
+//    private DiscussPostDAO discussPostDAO;
+//
+//
+//    @Test
+//    public void tesPostSearchMigration() {
+//        List<DiscussPost> posts = discussPostMapper.selectDiscussPosts(0, 0, 10000);
+//        for (DiscussPost post : posts)
+//            discussPostDAO.save(post);
+//    }
 //
 //    @Test
 //    public void tesNoticeMigration()  {

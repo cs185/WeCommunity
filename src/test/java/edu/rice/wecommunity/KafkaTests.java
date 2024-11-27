@@ -23,8 +23,8 @@ public class KafkaTests {
 
     @Test
     public void testKafka() {
-        kafkaProducer.sendMessage("test", "你好");
-        kafkaProducer.sendMessage("test", "在吗");
+        kafkaProducer.sendMessage("MSKTutorialTopic", "Hello!");
+        kafkaProducer.sendMessage("MSKTutorialTopic", "Are you there?");
 
         try {
             Thread.sleep(1000 * 10);
@@ -50,7 +50,7 @@ class KafkaProducer {
 @Component
 class KafkaConsumer {
 
-    @KafkaListener(topics = {"test"})
+    @KafkaListener(topics = {"MSKTutorialTopic"})
     public void handleMessage(ConsumerRecord record) {
         System.out.println(record.value());
     }

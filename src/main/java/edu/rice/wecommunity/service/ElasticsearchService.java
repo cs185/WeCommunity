@@ -1,5 +1,6 @@
 package edu.rice.wecommunity.service;
 
+import edu.rice.wecommunity.dao.elasticsearch.DiscussPostDAO;
 import edu.rice.wecommunity.dao.elasticsearch.DiscussPostRepository;
 import edu.rice.wecommunity.entity.DiscussPost;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -26,17 +27,17 @@ import java.util.List;
 public class ElasticsearchService {
 
     @Autowired
-    private DiscussPostRepository discussRepository;
+    private DiscussPostDAO discussPostDAO;
 
     @Autowired
     private ElasticsearchRestTemplate elasticTemplate;
 
     public void saveDiscussPost(DiscussPost post) {
-        discussRepository.save(post);
+        discussPostDAO.save(post);
     }
 
     public void deleteDiscussPost(int id) {
-        discussRepository.deleteById(id);
+        discussPostDAO.deleteById(id);
     }
 
     public Page<DiscussPost> searchDiscussPost(String keyword, int current, int limit) {

@@ -71,6 +71,9 @@ public class MessageController {
                 int targetId = user.getId() == message.getFromId() ? message.getToId() : message.getFromId();
                 map.put("target", userService.findUserById(targetId));
 
+                map.put("groupId", null);
+                map.put("groupName", null);
+
                 conversations.add(map);
             }
         }
@@ -102,7 +105,7 @@ public class MessageController {
         int noticeUnreadCount = noticeService.findNoticeUnreadCount(user.getId(), null);
         model.addAttribute("noticeUnreadCount", noticeUnreadCount);
 
-        return "/site/letter";
+        return "site/letter";
     }
 
     @LoginRequired
@@ -141,7 +144,7 @@ public class MessageController {
             messageService.readMessage(ids);
         }
 
-        return "/site/letter-detail";
+        return "site/letter-detail";
     }
 
 //    @LoginRequired

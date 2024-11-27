@@ -1,5 +1,6 @@
 package edu.rice.wecommunity.service;
 
+import edu.rice.wecommunity.controller.HomeController;
 import edu.rice.wecommunity.dao.UserMapper;
 import edu.rice.wecommunity.entity.LoginTicket;
 import edu.rice.wecommunity.entity.User;
@@ -8,6 +9,8 @@ import edu.rice.wecommunity.util.CommunityUtil;
 import edu.rice.wecommunity.util.MailClient;
 import edu.rice.wecommunity.util.RedisKeyUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService implements CommunityConstant {
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     private UserMapper userMapper;
@@ -197,7 +201,12 @@ public class UserService implements CommunityConstant {
     // 1.优先从缓存中取值
     private User getCache(int userId) {
         String redisKey = RedisKeyUtil.getUserKey(userId);
-        return (User) redisTemplate.opsForValue().get(redisKey);
+        try {
+            return (User) redisTemplate.opsForValue().get(redisKey);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return null;
+        }
     }
 
     // 2.取不到时初始化缓存数据

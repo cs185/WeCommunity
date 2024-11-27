@@ -1,8 +1,9 @@
 package edu.rice.wecommunity.entity;
 
 import java.util.Date;
+import java.io.Serializable;
 
-public class LoginTicket {
+public class LoginTicket implements Serializable{
 
     private int id;
     private int userId;

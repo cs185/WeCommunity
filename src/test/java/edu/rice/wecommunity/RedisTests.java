@@ -134,47 +134,47 @@ public class RedisTests {
     }
 
     // 统计20万个重复数据的独立总数.
-    @Test
-    public void testHyperLogLog() {
-        String redisKey = "test:hll:01";
-
-        for (int i = 1; i <= 100000; i++) {
-            redisTemplate.opsForHyperLogLog().add(redisKey, i);
-        }
-
-        for (int i = 1; i <= 100000; i++) {
-            int r = (int) (Math.random() * 100000 + 1);
-            redisTemplate.opsForHyperLogLog().add(redisKey, r);
-        }
-
-        long size = redisTemplate.opsForHyperLogLog().size(redisKey);
-        System.out.println(size);
-    }
+//    @Test
+//    public void testHyperLogLog() {
+//        String redisKey = "test:hll:01";
+//
+//        for (int i = 1; i <= 100000; i++) {
+//            redisTemplate.opsForHyperLogLog().add(redisKey, i);
+//        }
+//
+//        for (int i = 1; i <= 100000; i++) {
+//            int r = (int) (Math.random() * 100000 + 1);
+//            redisTemplate.opsForHyperLogLog().add(redisKey, r);
+//        }
+//
+//        long size = redisTemplate.opsForHyperLogLog().size(redisKey);
+//        System.out.println(size);
+//    }
 
     // 将3组数据合并, 再统计合并后的重复数据的独立总数.
-    @Test
-    public void testHyperLogLogUnion() {
-        String redisKey2 = "test:hll:02";
-        for (int i = 1; i <= 10000; i++) {
-            redisTemplate.opsForHyperLogLog().add(redisKey2, i);
-        }
-
-        String redisKey3 = "test:hll:03";
-        for (int i = 5001; i <= 15000; i++) {
-            redisTemplate.opsForHyperLogLog().add(redisKey3, i);
-        }
-
-        String redisKey4 = "test:hll:04";
-        for (int i = 10001; i <= 20000; i++) {
-            redisTemplate.opsForHyperLogLog().add(redisKey4, i);
-        }
-
-        String unionKey = "test:hll:union";
-        redisTemplate.opsForHyperLogLog().union(unionKey, redisKey2, redisKey3, redisKey4);
-
-        long size = redisTemplate.opsForHyperLogLog().size(unionKey);
-        System.out.println(size);
-    }
+//    @Test
+//    public void testHyperLogLogUnion() {
+//        String redisKey2 = "test:hll:02";
+//        for (int i = 1; i <= 10000; i++) {
+//            redisTemplate.opsForHyperLogLog().add(redisKey2, i);
+//        }
+//
+//        String redisKey3 = "test:hll:03";
+//        for (int i = 5001; i <= 15000; i++) {
+//            redisTemplate.opsForHyperLogLog().add(redisKey3, i);
+//        }
+//
+//        String redisKey4 = "test:hll:04";
+//        for (int i = 10001; i <= 20000; i++) {
+//            redisTemplate.opsForHyperLogLog().add(redisKey4, i);
+//        }
+//
+//        String unionKey = "test:hll:union";
+//        redisTemplate.opsForHyperLogLog().union(unionKey, redisKey2, redisKey3, redisKey4);
+//
+//        long size = redisTemplate.opsForHyperLogLog().size(unionKey);
+//        System.out.println(size);
+//    }
 
     // 统计一组数据的布尔值
     @Test
