@@ -4,15 +4,17 @@ phases:
   install:
     runtime-versions:
       java: corretto17 # Use Java 17 environment
-      maven: 3.8 # Maven version
     commands:
-      - echo Installing dependencies...
-      - mvn dependency:resolve # Resolve all project dependencies
+      - echo Installing Maven...
+      - curl -o /tmp/apache-maven-3.8.8-bin.tar.gz https://downloads.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz
+      - tar xzvf /tmp/apache-maven-3.8.8-bin.tar.gz -C /tmp/
+      - export PATH=$PATH:/tmp/apache-maven-3.8.8/bin # Add Maven to PATH
+      - mvn -v # Verify Maven installation
 
   pre_build:
     commands:
       - echo Running pre-build steps...
-      - mvn test # Run unit tests
+      - mvn dependency:resolve # Resolve project dependencies
 
   build:
     commands:
@@ -22,13 +24,13 @@ phases:
   post_build:
     commands:
       - echo Build completed successfully!
-      - ls target # List contents of the build directory to verify output
+      - ls target # List the contents of the build directory
 
 artifacts:
   files:
     - target/*.jar # Save the generated JAR file
-  discard-paths: yes # Discard file paths, only save the JAR file itself
-  base-directory: target # Root directory for build artifacts
+  discard-paths: yes # Only save the JAR file itself
+  base-directory: target # Directory containing build artifacts
 
 cache:
   paths:
