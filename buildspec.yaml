@@ -1,0 +1,36 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17 # Use Java 17 environment
+      maven: 3.8 # Maven version
+    commands:
+      - echo Installing dependencies...
+      - mvn dependency:resolve # Resolve all project dependencies
+
+  pre_build:
+    commands:
+      - echo Running pre-build steps...
+      - mvn test # Run unit tests
+
+  build:
+    commands:
+      - echo Building the Spring Boot application...
+      - mvn clean package -DskipTests # Build the project and skip tests
+
+  post_build:
+    commands:
+      - echo Build completed successfully!
+      - ls target # List contents of the build directory to verify output
+
+artifacts:
+  files:
+    - target/*.jar # Save the generated JAR file
+  discard-paths: yes # Discard file paths, only save the JAR file itself
+  base-directory: target # Root directory for build artifacts
+
+cache:
+  paths:
+    - ~/.m2/repository/**/* # Cache Maven local repository
+
