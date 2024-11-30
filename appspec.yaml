@@ -1,0 +1,40 @@
+version: 0.0
+os: linux
+files:
+  - source: target/wecommunity-0.0.1-SNAPSHOT.jar
+    destination: /home/ec2-user/wecommunity
+
+permissions:
+  - object: /home/ec2-user/wecommunity/wecommunity-0.0.1-SNAPSHOT.jar
+    pattern: "*.jar"
+    owner: ec2-user
+    group: ec2-user
+    mode: 755
+    type:
+      - file
+
+hooks:
+  ApplicationStop:
+    - location: scripts/stop_server.sh
+      timeout: 300
+      runas: ec2-user
+
+  BeforeInstall:
+    - location: scripts/install_dependencies.sh
+      timeout: 300
+      runas: root
+
+  AfterInstall:
+    - location: scripts/set_permissions.sh
+      timeout: 300
+      runas: root
+
+  ApplicationStart:
+    - location: scripts/start_server.sh
+      timeout: 300
+      runas: ec2-user
+
+  ValidateService:
+    - location: scripts/validate_service.sh
+      timeout: 300
+      runas: ec2-user
