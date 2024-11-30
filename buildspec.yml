@@ -30,7 +30,7 @@ artifacts:
   files:
     - target/wecommunity-0.0.1-SNAPSHOT.jar # Save the generated JAR file
     - scripts/*
-    - appspec.yaml
+    - appspec.yml
 
 cache:
   paths:
