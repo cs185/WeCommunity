@@ -63,3 +63,4 @@ replay_pid*
 *.sql
 
 D:/
+/src/main/resources/application-dev.properties
