@@ -19,8 +19,7 @@ phases:
   build:
     commands:
       - echo Building the Spring Boot application...
-      - export SPRING_PROFILES_ACTIVE=prod
-      - mvn clean package -DskipTests # Build the project and skip tests
+      - mvn clean package -Pprod -DskipTests # Build the project and skip tests
 
   post_build:
     commands:
