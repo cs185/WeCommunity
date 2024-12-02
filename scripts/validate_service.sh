@@ -4,7 +4,7 @@
 sleep 10
 
 # Check if the application is running on the expected port (e.g., 8080)
-if curl -s http://localhost:8080 > /dev/null; then
+if curl -s http://localhost:8080/wecommunity/index > /dev/null; then
   echo "Application is running successfully."
   exit 0
 else
