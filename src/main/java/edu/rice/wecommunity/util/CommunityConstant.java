@@ -87,6 +87,8 @@ public interface CommunityConstant {
      */
     String TOPIC_CHAT = "chat";
 
+    String EXCHANGE_SUFFIX = "-exchange";
+
     /**
      * 系统用户ID
      */

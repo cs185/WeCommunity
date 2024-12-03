@@ -10,11 +10,10 @@ import edu.rice.wecommunity.service.DiscussPostService;
 import edu.rice.wecommunity.service.ElasticsearchService;
 import edu.rice.wecommunity.service.MessageService;
 import edu.rice.wecommunity.util.CommunityConstant;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -39,20 +38,8 @@ public class EventConsumer implements CommunityConstant {
     @Autowired
     private ElasticsearchService elasticsearchService;
 
-    @Autowired
-    private GroupService groupService;
-
-//    @Autowired
-//    private GroupService groupService;
-
-    @KafkaListener(topics = {TOPIC_COMMENT, TOPIC_LIKE, TOPIC_FOLLOW, TOPIC_REQUEST})
-    public void handleCommentMessage(ConsumerRecord record) {
-        if (record == null || record.value() == null) {
-            logger.error("Empty Notice!");
-            return;
-        }
-
-        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+    @RabbitListener(queues = {TOPIC_COMMENT, TOPIC_LIKE, TOPIC_FOLLOW, TOPIC_REQUEST})
+    public void handleCommentMessage(Event event) {
         if (event == null) {
             logger.error("Unsupported Format!");
             return;
@@ -70,16 +57,10 @@ public class EventConsumer implements CommunityConstant {
         noticeService.addNotice(notice);
     }
 
-    @KafkaListener(topics = {TOPIC_PUBLISH})
-    public void handlePublishMessage(ConsumerRecord record) {
-        if (record == null || record.value() == null) {
-            logger.error("消息的内容为空!");
-            return;
-        }
-
-        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+    @RabbitListener(queues = {TOPIC_PUBLISH})
+    public void handlePublishMessage(Event event) {
         if (event == null) {
-            logger.error("消息格式错误!");
+            logger.error("Unsupported Format!");
             return;
         }
 
@@ -88,32 +69,20 @@ public class EventConsumer implements CommunityConstant {
     }
 
     // 消费删帖事件
-    @KafkaListener(topics = {TOPIC_DELETE})
-    public void handleDeleteMessage(ConsumerRecord record) {
-        if (record == null || record.value() == null) {
-            logger.error("消息的内容为空!");
-            return;
-        }
-
-        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+    @RabbitListener(queues = {TOPIC_DELETE})
+    public void handleDeleteMessage(Event event) {
         if (event == null) {
-            logger.error("消息格式错误!");
+            logger.error("Unsupported Format!");
             return;
         }
 
         elasticsearchService.deleteDiscussPost(event.getEntityId());
     }
 
-    @KafkaListener(topics = {TOPIC_CHAT})
-    public void sendChatMessage(ConsumerRecord record) {
-        if (record == null || record.value() == null) {
-            logger.error("消息的内容为空!");
-            return;
-        }
-
-        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+    @RabbitListener(queues = {TOPIC_CHAT})
+    public void sendChatMessage(Event event) {
         if (event == null) {
-            logger.error("消息格式错误!");
+            logger.error("Unsupported Format!");
             return;
         }
 
