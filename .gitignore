@@ -66,3 +66,4 @@ D:/
 /src/main/resources/application-dev.properties
 /src/main/resources/application-qa.properties
 /src/test/java/edu/rice/wecommunity/AWSParamStoreTests.java
+/log/
