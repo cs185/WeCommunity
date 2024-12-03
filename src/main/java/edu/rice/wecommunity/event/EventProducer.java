@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import edu.rice.wecommunity.entity.Event;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
