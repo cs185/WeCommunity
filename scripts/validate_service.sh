@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # wait to make sure the server starts
-sleep 10
+sleep 30
 
 URL="http://127.0.0.1:8080/wecommunity/index"
 
