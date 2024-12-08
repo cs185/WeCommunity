@@ -15,8 +15,8 @@ import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfig
 @Configuration
 public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
-    private static final String ELASTICSEARCH_URL = "https://19be876a21c44ba4888d232520bd1861.us-east-2.aws.elastic-cloud.com:443";
-    private static final String API_KEY = "NHhXVEZKTUIzVjFqa2xZZ1Mtd006RUFFdVRyMEdTQTJLQ1JjMFpCVDc5QQ==";
+    private static final String ELASTICSEARCH_URL = "https://b20d6e47e1ab4244bd298876793a97c9.us-east-1.aws.found.io:443";
+    private static final String API_KEY = "NGx0WG41TUJ2TWU2MXZocURwdGQ6WDZxSGM4ZERTeS1hZ1dTcDdkaDU4dw==";
 
     @Override
     @Bean

@@ -133,7 +133,6 @@ public class RedisTests {
         System.out.println(obj);
     }
 
-    // 统计20万个重复数据的独立总数.
 //    @Test
 //    public void testHyperLogLog() {
 //        String redisKey = "test:hll:01";
@@ -151,7 +150,6 @@ public class RedisTests {
 //        System.out.println(size);
 //    }
 
-    // 将3组数据合并, 再统计合并后的重复数据的独立总数.
 //    @Test
 //    public void testHyperLogLogUnion() {
 //        String redisKey2 = "test:hll:02";

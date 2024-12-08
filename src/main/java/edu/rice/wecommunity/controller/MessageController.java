@@ -47,6 +47,7 @@ public class MessageController {
     @RequestMapping(path = "/list", method = RequestMethod.GET)
     public String getLetterList(Model model, Page page) {
         User user = hostHolder.getUser();
+        System.out.println("User Type: " + user.getType());
         // 分页信息
         page.setLimit(5);
         page.setPath("/letter/list");
