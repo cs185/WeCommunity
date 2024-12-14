@@ -109,4 +109,6 @@ public interface CommunityConstant {
      */
     String AUTHORITY_MODERATOR = "moderator";
 
+    String S3_SERVICE_PREFIX = "https://wecommunity-static-files.s3.us-east-2.amazonaws.com";
+
 }

@@ -57,4 +57,11 @@ public class DiscussPostService {
         return discussPostMapper.updateStatus(id, status);
     }
 
+    public List<String> findImageUrls(int discussPostId) {
+        return discussPostMapper.selectImageUrls(discussPostId);
+    }
+
+    public void addPostImg(int postId, String pathName) {
+        discussPostMapper.insertPostImgUrl(postId, pathName);
+    }
 }

@@ -56,9 +56,18 @@
 				</div>
 			</div>
 			<!-- Main Content -->
-			<div class="mt-4 mb-3 content" th:utext="${post.content}">
-				null
+			<div class="mt-4 mb-3 content">
+				<p th:utext="${post.content}"></p>
+
+				<!-- 图片容器 -->
+				<div class="image-grid" th:if="${imageUrls != null}">
+					<!-- 遍历图片列表 -->
+					<img th:each="image, index : ${imageUrls}"
+						 th:src="${image}"
+						 th:alt="'Image ' + (${index} + 1)">
+				</div>
 			</div>
+
 		</div>
 		<!-- Replies -->
 		<div class="container mt-3">

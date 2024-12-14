@@ -8,6 +8,7 @@ import edu.rice.wecommunity.service.UserService;
 import edu.rice.wecommunity.util.CommunityConstant;
 import edu.rice.wecommunity.util.CommunityUtil;
 import edu.rice.wecommunity.util.HostHolder;
+import edu.rice.wecommunity.util.S3Util;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +33,8 @@ public class UserController implements CommunityConstant {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Value("${community.path.upload}")
+    @Value("${community.path.upload-user-avatar}")
     private String uploadPath;
-
-    @Value("${community.path.domain}")
-    private String domain;
-
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
 
     @Autowired
     private UserService userService;
@@ -77,20 +72,18 @@ public class UserController implements CommunityConstant {
         // 生成随机文件名
         fileName = CommunityUtil.generateUUID() + suffix;
         // 确定文件存放的路径
-        File dest = new File(uploadPath + "/" + fileName);
+        String pathName = uploadPath + "/" + fileName;
         try {
             // 存储文件
-            headerImage.transferTo(dest);
+            S3Util.uploadFile(pathName, headerImage.getInputStream());
         } catch (IOException e) {
             logger.error("Fail to upload file: " + e.getMessage());
             throw new RuntimeException("Fail to upload file, server error!", e);
         }
 
-        // 更新当前用户的头像的路径(web访问路径)
-        // http://localhost:8080/community/user/header/xxx.png
         User user = hostHolder.getUser();
-        String headerUrl = domain + contextPath + "/user/header/" + fileName;
-        userService.updateHeader(user.getId(), headerUrl);
+        String imgUrl = S3_SERVICE_PREFIX + '/' + pathName;
+        userService.updateHeader(user.getId(), imgUrl);
 
         return "redirect:/index";
     }

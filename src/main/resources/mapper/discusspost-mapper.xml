@@ -43,6 +43,17 @@
         where id = #{id}
     </select>
 
+    <insert id="insertPostImgUrl">
+        insert into post_images(post_id, image_url)
+        values(#{postId},#{pathName})
+    </insert>
+
+    <select id="selectImageUrls" resultType="String">
+        select image_url
+        from post_images
+        where post_id = #{discussPostId}
+    </select>
+
     <update id="updateCommentCount">
         update discuss_post set comment_count = #{commentCount} where id = #{id}
     </update>

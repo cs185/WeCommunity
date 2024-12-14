@@ -1,5 +1,6 @@
 package edu.rice.wecommunity.controller;
 
+import edu.rice.wecommunity.annotation.LoginRequired;
 import edu.rice.wecommunity.entity.*;
 import edu.rice.wecommunity.event.EventProducer;
 import edu.rice.wecommunity.service.CommentService;
@@ -9,14 +10,19 @@ import edu.rice.wecommunity.service.UserService;
 import edu.rice.wecommunity.util.CommunityConstant;
 import edu.rice.wecommunity.util.CommunityUtil;
 import edu.rice.wecommunity.util.HostHolder;
+import edu.rice.wecommunity.util.S3Util;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Controller
@@ -41,13 +47,16 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private EventProducer eventProducer;
 
+    @Value("${community.path.upload-post-img}")
+    private String uploadPath;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @LoginRequired
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public String addDiscussPost(String title, String content) {
+    public String addDiscussPost(String title, String content, MultipartFile imageFile) {
         User user = hostHolder.getUser();
-        if (user == null) {
-            return CommunityUtil.getJSONString(403, "Please log in!");
-        }
 
         DiscussPost post = new DiscussPost();
         post.setUserId(user.getId());
@@ -55,6 +64,28 @@ public class DiscussPostController implements CommunityConstant {
         post.setContent(content);
         post.setCreateTime(new Date());
         discussPostService.addDiscussPost(post);
+
+        if (imageFile != null) {
+            String fileName = imageFile.getOriginalFilename();
+            String suffix = fileName.substring(fileName.lastIndexOf("."));
+            if (StringUtils.isBlank(suffix)) {
+                return CommunityUtil.getJSONString(1, "Error: extension not supported!");
+            }
+
+            // 生成随机文件名
+            fileName = CommunityUtil.generateUUID() + suffix;
+            String pathName = uploadPath + "/" + fileName;
+            // 确定文件存放的路径
+            try {
+                S3Util.uploadFile(pathName, imageFile.getInputStream());
+            } catch (IOException e) {
+                logger.error("Fail to upload file: " + e.getMessage());
+                throw new RuntimeException("Fail to upload file, server error!", e);
+            }
+
+            String imgUrl = S3_SERVICE_PREFIX + '/' + pathName;
+            discussPostService.addPostImg(post.getId(), imgUrl);
+        }
 
         // 触发发帖事件
         Event event = new Event()
@@ -73,6 +104,9 @@ public class DiscussPostController implements CommunityConstant {
         // 帖子
         DiscussPost post = discussPostService.findDiscussPostById(discussPostId);
         model.addAttribute("post", post);
+        // image
+        List<String> imageUrls = discussPostService.findImageUrls(discussPostId);
+        model.addAttribute("imageUrls", imageUrls);
         // 作者
         User user = userService.findUserById(post.getUserId());
         model.addAttribute("user", user);

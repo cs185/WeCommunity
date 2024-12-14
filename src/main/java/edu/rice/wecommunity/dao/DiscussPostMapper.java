@@ -30,4 +30,8 @@ public interface DiscussPostMapper {
     void deleteAll();
 
     void batchInsertPosts(@Param("pList") List<DiscussPost> pList);
+
+    List<String> selectImageUrls(int discussPostId);
+
+    void insertPostImgUrl(int postId, String pathName);
 }

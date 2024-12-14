@@ -49,10 +49,16 @@ public class HomeController implements CommunityConstant {
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", post);
                 try {
+                    map.put("content", post.getContent().length() > 135
+                            ? post.getContent().substring(0, 135) + "..."
+                            : post.getContent());
                     User user = userService.findUserById(post.getUserId());
                     map.put("user", user);
                     long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
                     map.put("likeCount", likeCount);
+
+                    List<String> imageUrls = discussPostService.findImageUrls(post.getId());
+                    map.put("imageUrls", imageUrls);
                 }
                 catch (Exception e) {
                     logger.error(e.getMessage());

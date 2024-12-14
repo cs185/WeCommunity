@@ -11,6 +11,7 @@
 	<link rel="icon" href="../static/img/logo-icon.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" th:href="@{/css/index.css}" />
 	<title>WeCommunity - Home</title>
 </head>
 <body>	
@@ -89,14 +90,25 @@
 								</button>
 							</div>
 							<div class="modal-body">
-								<form>
+								<form id="publishForm" enctype="multipart/form-data">
 									<div class="form-group">
 										<label for="recipient-name" class="col-form-label">Title：</label>
-										<input type="text" class="form-control" id="recipient-name">
+										<input type="text" class="form-control" id="recipient-name" name="title">
 									</div>
 									<div class="form-group">
 										<label for="message-text" class="col-form-label">Main text：</label>
-										<textarea class="form-control" id="message-text" rows="15"></textarea>
+										<textarea class="form-control" id="message-text" name="content" rows="15"></textarea>
+									</div>
+
+									<h6 for="message-text" class="col-form-label">Upload Image</h6>
+									<div class="form-group row mt-4">
+										<label for="post-image" class="col-sm-2 col-form-label text-right">Select Image:</label>
+										<div class="col-sm-10">
+											<div class="custom-file">
+												<input type="file" class="custom-file-input" id="post-image" name="imageFile" onchange="updateFileName()">
+												<p class="custom-file-label" id="post-image-box">Choose an Image File</p>
+											</div>
+										</div>
 									</div>
 								</form>
 							</div>
@@ -107,6 +119,7 @@
 						</div>
 					</div>
 				</div>
+
 				<!-- 提示框 -->
 				<div class="modal fade" id="hintModal" tabindex="-1" role="dialog" aria-labelledby="hintModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg" role="document">
@@ -128,11 +141,19 @@
 							<img th:src="${map.user.headerUrl}" class="mr-4 rounded-circle" alt="user header" style="width:50px;height:50px;">
 						</a>
 						<div class="media-body">
-							<h6 class="mt-0 mb-3">
-								<a th:href="@{|/discuss/detail/${map.post.id}|}" th:utext="${map.post.title}">content</a>
+							<div class="mt-0 mb-3">
+								<a th:href="@{|/discuss/detail/${map.post.id}|}"><h5 th:utext="${map.post.title}">title</h5></a>
+								<br>
+								<a th:href="@{|/discuss/detail/${map.post.id}|}"><p th:utext="${map.content}">content</p></a>
 								<span class="badge badge-secondary bg-primary" th:if="${map.post.type==1}">Sticky</span>
 								<span class="badge badge-secondary bg-danger" th:if="${map.post.status==1}">Pinned</span>
-							</h6>
+							</div>
+							<div class="image-grid" th:if="${map.imageUrls != null}">
+								<!-- 遍历图片列表 -->
+								<img th:each="image, index : ${map.imageUrls}"
+									 th:src="${image}"
+									 th:alt="'Image ' + (${index} + 1)">
+							</div>
 							<div class="text-muted font-size-12">
 								<u class="mr-3" th:utext="${map.user.username}">Carl</u> posted at <b th:text="${#dates.format(map.post.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-15 15:32:18</b>
 								<ul class="d-inline float-right">
