@@ -35,8 +35,8 @@ public class EventConsumer implements CommunityConstant {
     @Autowired
     private DiscussPostService discussPostService;
 
-//    @Autowired
-//    private ElasticsearchService elasticsearchService;
+    @Autowired
+    private ElasticsearchService elasticsearchService;
 
     @RabbitListener(queues = {TOPIC_COMMENT, TOPIC_LIKE, TOPIC_FOLLOW, TOPIC_REQUEST})
     public void handleCommentMessage(Event event) {
@@ -65,7 +65,7 @@ public class EventConsumer implements CommunityConstant {
         }
 
         DiscussPost post = discussPostService.findDiscussPostById(event.getEntityId());
-//        elasticsearchService.saveDiscussPost(post);
+        elasticsearchService.saveDiscussPost(post);
     }
 
     // 消费删帖事件
@@ -76,7 +76,7 @@ public class EventConsumer implements CommunityConstant {
             return;
         }
 
-//        elasticsearchService.deleteDiscussPost(event.getEntityId());
+        elasticsearchService.deleteDiscussPost(event.getEntityId());
     }
 
     @RabbitListener(queues = {TOPIC_CHAT})
