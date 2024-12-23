@@ -12,5 +12,6 @@ if [ "$HTTP_RESPONSE" -eq 200 ]; then
   exit 0
 else
   echo "Application failed to start. HTTP response code: $HTTP_RESPONSE"
+  cat /var/log/community/application.log
   exit 1
 fi
