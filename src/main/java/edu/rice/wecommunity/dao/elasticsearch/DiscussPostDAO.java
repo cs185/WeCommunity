@@ -18,6 +18,7 @@ public class DiscussPostDAO {
 
     public void save(DiscussPost post) {
         try {
+//            discussRepository.save(post);
             discussRepository.save(post);
         }
         catch (RuntimeException e) {
